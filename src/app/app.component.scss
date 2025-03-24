@@ -1,0 +1,25 @@
+.top {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+.top div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.image-holder {
+  height: fit-content;
+  display: flex;
+}
+
+.image-holder img {
+  height: 1.2cap;
+  aspect-ratio: 1;
+}
