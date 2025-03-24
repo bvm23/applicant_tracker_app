@@ -1,0 +1,16 @@
+@use "colors" as c;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+:root {
+    background-color: c.$main_bg;
+    color: c.$text_3;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    font-weight: normal;
+    box-sizing: border-box;
+}
