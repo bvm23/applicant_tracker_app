@@ -1,0 +1,28 @@
+@use "../../sass/colors" as c;
+
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: 0;
+  border-radius: 0.6rem;
+  gap: 4px;
+  padding: 0.4rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: c.$bg_3;
+  }
+}
+
+.icon {
+  color: c.$text_3;
+  display: inline-flex;
+}
+
+span {
+  color: c.$text_3;
+  text-transform: capitalize;
+  font-weight: 600;
+}
