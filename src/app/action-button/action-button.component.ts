@@ -9,6 +9,7 @@ import { LucideAngularModule } from 'lucide-angular';
 })
 export class ActionButtonComponent {
   icon = input.required<any>();
+  name = input<string>();
   color = input<string>();
   size = input<number>(14);
 }

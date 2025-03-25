@@ -6,10 +6,12 @@
   strokeWidth="3"
   [absoluteStrokeWidth]="false"
 ></i-lucide>
+@if (name()) {
 <span
   [style]="{
     color: color(),
     fontSize: size() + 'px',
   }"
-  ><ng-content
-/></span>
+  >{{ name() }}</span
+>
+}
