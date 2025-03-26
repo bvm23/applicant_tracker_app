@@ -2,7 +2,7 @@ import { Component, input } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
-  selector: 'button[at-action-button]',
+  selector: 'button[at-action-button], at-action-button',
   imports: [LucideAngularModule],
   templateUrl: './action-button.component.html',
   styleUrl: './action-button.component.scss',
