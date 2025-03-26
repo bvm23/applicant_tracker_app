@@ -1,36 +1,28 @@
 <section id="controllers">
   <article class="switch-action-buttons">
-    <div>
-      <at-action-button [icon]="groupIcon" name="by stage"></at-action-button>
-    </div>
-    <div>
+    @for(btn of switchButtons; track $index){
+    <div
+      [class]="{
+        'border-bottom': true,
+        'border-bottom-color': selectedView() === btn.view
+      }"
+    >
       <at-action-button
-        [icon]="tableIcon"
-        name="all applicants"
+        [icon]="btn.icon"
+        [name]="btn.name"
+        (click)="onClick(btn.view)"
       ></at-action-button>
     </div>
-    <div>
-      <at-action-button
-        [icon]="tableIcon"
-        name="engineering"
-      ></at-action-button>
-    </div>
-    <div>
-      <at-action-button [icon]="tableIcon" name="table"></at-action-button>
-    </div>
+    }
   </article>
   <article class="modifier-action-buttons">
-    <div>
-      <at-action-button [icon]="filterIcon"></at-action-button>
+    @for(btn of modifierButtons; track $index){
+    <div [title]="btn.name">
+      <at-action-button [icon]="btn.icon"></at-action-button>
     </div>
-    <div>
-      <at-action-button [icon]="sortIcon"></at-action-button>
-    </div>
-    <div>
-      <at-action-button [icon]="searchIcon"></at-action-button>
-    </div>
+    }
   </article>
 </section>
 <section id="content">
-  <p>summary</p>
+  <p>{{ selectedView() }}summary</p>
 </section>

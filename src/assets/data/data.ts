@@ -1,3 +1,5 @@
+import { icons } from '../icon/icons';
+
 export const data = [
   {
     id: '0.11259289307257725',
@@ -88,5 +90,54 @@ export const data = [
     employment: 'looking',
     source: 'referral',
     added: '24/03/2025, 22:07:07',
+  },
+];
+
+export const switchActionButtonData: {
+  icon: string;
+  name: string;
+  view: string;
+}[] = [
+  {
+    icon: icons['GROUP'],
+    name: 'by stage',
+    view: 'STAGE',
+  },
+  {
+    icon: icons['TABLE'],
+    name: 'all applicants',
+    view: 'ALL',
+  },
+  {
+    icon: icons['TABLE'],
+    name: 'engineering',
+    view: 'ENGINEERING',
+  },
+  {
+    icon: icons['TABLE'],
+    name: 'table',
+    view: 'TABLE',
+  },
+];
+
+export const modifierActionButtonData: {
+  icon: string;
+  name: string;
+  view: string;
+}[] = [
+  {
+    icon: icons['FILTER'],
+    name: 'filter',
+    view: 'FILTER',
+  },
+  {
+    icon: icons['SORT'],
+    name: 'sort',
+    view: 'SORT',
+  },
+  {
+    icon: icons['SEARCH'],
+    name: 'search',
+    view: 'SEARCH',
   },
 ];

@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ActionButtonComponent } from '../action-button/action-button.component';
 import { icons } from '../../assets/icon/icons';
+import {
+  switchActionButtonData,
+  modifierActionButtonData,
+} from '../../assets/data/data';
 
 @Component({
   selector: 'at-summary',
@@ -9,9 +13,21 @@ import { icons } from '../../assets/icon/icons';
   styleUrl: './summary.component.scss',
 })
 export class SummaryComponent {
-  readonly tableIcon = icons['TABLE'];
-  readonly groupIcon = icons['GROUP'];
-  readonly searchIcon = icons['SEARCH'];
-  readonly sortIcon = icons['SORT'];
-  readonly filterIcon = icons['FILTER'];
+  switchButtons: {
+    icon: string;
+    name: string;
+    view: string;
+  }[] = switchActionButtonData;
+
+  modifierButtons: {
+    icon: string;
+    name: string;
+    view: string;
+  }[] = modifierActionButtonData;
+
+  selectedView = signal<string>('STAGE');
+
+  onClick(view: string) {
+    this.selectedView.set(view);
+  }
 }

@@ -11,11 +11,20 @@
     align-items: center;
     border-bottom: 1px solid grey;
 
-    .switch-action-buttons,
     .modifier-action-buttons {
       div {
-        display: inline-block;
+        @extend .border-bottom;
       }
     }
   }
+}
+
+.border-bottom {
+  display: inline-block;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+}
+
+.border-bottom-color {
+  border-bottom-color: #fff;
 }
