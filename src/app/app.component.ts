@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
-import { ActionButtonComponent } from './ui/action-button/action-button.component';
+import { ActionButtonComponent } from './shared/action-button/action-button.component';
 import { icons } from '../assets/icon/icons';
 import { SummaryComponent } from './summary/summary.component';
 
