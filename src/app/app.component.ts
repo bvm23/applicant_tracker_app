@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from './header/header.component';
-import { ActionButtonComponent } from './shared/action-button/action-button.component';
-import { icons } from '../assets/icon/icons';
-import { SummaryComponent } from './summary/summary.component';
+import { HeaderComponent } from './features/header/header.component';
+import { ActionButtonComponent } from './shared/components/action-button/action-button.component';
+import { icons } from './core/constants/icons.constants';
+import { SummaryComponent } from './features/summary/summary.component';
 
 @Component({
   selector: 'app-root',

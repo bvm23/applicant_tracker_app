@@ -1,4 +1,4 @@
-import { icons } from '../icon/icons';
+import { icons } from './icons.constants';
 
 export const data = [
   {

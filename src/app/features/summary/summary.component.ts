@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { ActionButtonComponent } from '../shared/action-button/action-button.component';
-import { icons } from '../../assets/icon/icons';
+import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
+import { icons } from '../../core/constants/icons.constants';
 import {
   switchActionButtonData,
   modifierActionButtonData,
-} from '../../assets/data/data';
+} from '../../core/constants/data.constants';
 
 @Component({
   selector: 'at-summary',
