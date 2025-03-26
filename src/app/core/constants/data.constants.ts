@@ -1,6 +1,6 @@
 import { icons } from './icons.constants';
 
-export const data = [
+export const Data = [
   {
     id: '0.11259289307257725',
     name: 'kim sanders',
@@ -93,7 +93,7 @@ export const data = [
   },
 ];
 
-export const switchActionButtonData: {
+export const SwitchActionButtonData: {
   icon: string;
   name: string;
   view: string;
@@ -120,7 +120,7 @@ export const switchActionButtonData: {
   },
 ];
 
-export const modifierActionButtonData: {
+export const ModifierActionButtonData: {
   icon: string;
   name: string;
   view: string;
@@ -140,4 +140,12 @@ export const modifierActionButtonData: {
     name: 'search',
     view: 'SEARCH',
   },
+];
+
+export const Stages = [
+  { name: 'Lead', value: 'lead' },
+  { name: 'Screen', value: 'screen' },
+  { name: 'Interview', value: 'interview' },
+  { name: 'Offer', value: 'offer' },
+  { name: 'Hired', value: 'hired' },
 ];
