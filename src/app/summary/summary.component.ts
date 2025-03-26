@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { ActionButtonComponent } from '../action-button/action-button.component';
+import { ActionButtonComponent } from '../ui/action-button/action-button.component';
 import { icons } from '../../assets/icon/icons';
 import {
   switchActionButtonData,
