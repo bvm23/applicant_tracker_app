@@ -3,10 +3,11 @@ import { Stages } from '../../../core/constants/data.constants';
 import { ApplicantService } from '../applicant.service';
 import { Applicant } from '../applicant.model';
 import { UserCardComponent } from '../../../shared/components/user-card/user-card.component';
+import { HighlightDirective } from '../../../shared/directives/highlight.directive';
 
 @Component({
   selector: 'at-grid-view',
-  imports: [UserCardComponent],
+  imports: [UserCardComponent, HighlightDirective],
   templateUrl: './grid-view.component.html',
   styleUrl: './grid-view.component.scss',
 })

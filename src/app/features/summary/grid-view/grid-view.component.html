@@ -1,7 +1,7 @@
 @for (stage of applicantByStages();track stage.value) {
 <section>
   <p>
-    <span>{{ stage.name }}</span
+    <span atHighlight="stage" [viewValue]="stage.value">{{ stage.name }}</span
     ><span>{{ stage.peopleCount }}</span>
   </p>
   <article class="list-holder">
