@@ -1,1 +1,13 @@
-<p>grid-view works!</p>
+@for (stage of applicantByStages();track stage.value) {
+<section>
+  <p>
+    <span>{{ stage.name }}</span
+    ><span>{{ stage.peopleCount }}</span>
+  </p>
+  <article class="list-holder">
+    @for (applicant of stage.people; track applicant.id) {
+    <at-user-card [user]="applicant"></at-user-card>
+    }
+  </article>
+</section>
+}

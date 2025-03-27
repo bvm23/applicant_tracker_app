@@ -1,0 +1,18 @@
+<h2>{{ user().name }}</h2>
+<a [href]="user().email" target="_blank">{{ user().email }}</a>
+<div class="manager-div">
+  <div class="image">
+    <img
+      src="https://img.freepik.com/free-vector/young-man-with-glasses-avatar_1308-175763.jpg?t=st=1743091432~exp=1743095032~hmac=4a676fe111e4770b1216e16a773fba963138f93c7fa694d38ebed4c318053881&w=740"
+      alt="avatar"
+    />
+  </div>
+  <span>{{ user().hiringManager }}</span>
+</div>
+<p>{{ user().location }}</p>
+<p>{{ user().role }}</p>
+<div class="skills">
+  @for (skill of user().skills; track $index) {
+  <p>{{ skill }}</p>
+  }
+</div>

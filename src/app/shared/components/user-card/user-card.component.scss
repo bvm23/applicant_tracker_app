@@ -1,0 +1,68 @@
+@use "../../../../sass/colors" as c;
+
+%text-align-transform {
+  text-align: left;
+  text-transform: capitalize;
+}
+
+:host {
+  background-color: c.$bg_2;
+  width: 100%;
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  color: c.$text_2;
+  cursor: pointer;
+  border: {
+    radius: 0.8rem;
+    width: 1px;
+    style: solid;
+    color: c.$bg_3;
+  }
+  @extend %text-align-transform;
+
+  & * {
+    width: max-content;
+  }
+
+  &:hover {
+    background: c.$bg_3;
+  }
+
+  a {
+    color: c.$text_2;
+    text-transform: none;
+  }
+
+  .manager-div {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+
+    .image {
+      display: flex;
+      place-content: center;
+      border-radius: 1rem;
+      overflow: hidden;
+      margin-right: 0.4rem;
+      img {
+        height: 1.8cap;
+        aspect-ratio: 1;
+      }
+    }
+  }
+
+  .skills {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    gap: 0.4rem;
+    p {
+      text-decoration: underline;
+    }
+  }
+}

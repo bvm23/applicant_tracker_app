@@ -1,5 +1,4 @@
 import { Component, input } from '@angular/core';
-import { Data as applicants } from '../../../core/constants/data.constants';
 import { GridViewComponent } from '../grid-view/grid-view.component';
 import { TableViewComponent } from '../table-view/table-view.component';
 
