@@ -9,8 +9,10 @@
   </div>
   <span>{{ user().hiringManager }}</span>
 </div>
-<p>{{ user().location }}</p>
-<p>{{ user().role }}</p>
+<p atHighlight="location" [viewValue]="user().location">
+  {{ user().location }}
+</p>
+<p atHighlight="role" [viewValue]="user().role">{{ user().role }}</p>
 <div class="skills">
   @for (skill of user().skills; track $index) {
   <p>{{ skill }}</p>

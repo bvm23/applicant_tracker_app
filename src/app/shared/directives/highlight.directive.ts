@@ -1,5 +1,4 @@
 import { Directive, ElementRef, inject, input } from '@angular/core';
-import { Stages } from '../../core/constants/data.constants';
 
 @Directive({
   selector: '[atHighlight]',
@@ -15,10 +14,11 @@ export class HighlightDirective {
     red: '#792223',
     orange: '#965218',
     yellow: '#8a6d0d',
+    grey: '#353535',
   };
 
-  viewFor = input('', { alias: 'atHighlight' });
-  viewValue = input();
+  viewFor = input<string>('', { alias: 'atHighlight' });
+  viewValue = input<string>();
 
   setHighlight() {
     let color = '';
@@ -39,6 +39,42 @@ export class HighlightDirective {
             break;
           case 'hired':
             color = this.colors.green;
+            break;
+          default:
+            color = '';
+        }
+        break;
+      case 'location':
+        switch (this.viewValue()) {
+          case 'san francisco':
+            color = this.colors.blue;
+            break;
+          case 'new york':
+            color = this.colors.green;
+            break;
+          case 'tokyo':
+            color = this.colors.red;
+            break;
+          default:
+            color = '';
+        }
+        break;
+      case 'role':
+        switch (this.viewValue()) {
+          case 'engineering - front end':
+            color = this.colors.blue;
+            break;
+          case 'vp of marketing':
+            color = this.colors.red;
+            break;
+          case 'design':
+            color = this.colors.orange;
+            break;
+          case 'support lead':
+            color = this.colors.grey;
+            break;
+          case 'engineering - ops':
+            color = this.colors.blue;
             break;
           default:
             color = '';
