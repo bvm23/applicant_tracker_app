@@ -113,11 +113,6 @@ export const SwitchActionButtonData: {
     name: 'engineering',
     view: 'ENGINEERING',
   },
-  {
-    icon: icons['TABLE'],
-    name: 'table',
-    view: 'TABLE',
-  },
 ];
 
 export const ModifierActionButtonData: {
