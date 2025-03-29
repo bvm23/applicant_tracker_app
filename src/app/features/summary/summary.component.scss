@@ -1,3 +1,5 @@
+@use "../../../sass/colors" as c;
+
 :host {
   padding: 0.4rem 6rem;
   width: 100%;
@@ -10,19 +12,32 @@
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid grey;
-
     .modifier-action-buttons {
+      display: flex;
+      margin-bottom: auto;
+      align-items: flex-start;
+
       div {
         @extend .border-bottom;
+      }
+
+      input {
+        padding: 4px;
+        background: transparent;
+        color: c.$text_2;
+        border: 0;
+        outline: none;
+        max-width: 10rem;
       }
     }
   }
 }
 
 .border-bottom {
-  display: inline-block;
   padding-bottom: 4px;
+  display: inline-block;
   border-bottom: 2px solid transparent;
+  place-self: center;
 }
 
 .border-bottom-color {

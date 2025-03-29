@@ -18,7 +18,24 @@
   <article class="modifier-action-buttons">
     @for(btn of modifierButtons; track $index){
     <div [title]="btn.name">
+      @if (btn.name==='search') {
+      <at-action-button
+        [icon]="searchOpen() ? closeSearchIcon : btn.icon"
+        (click)="toggleSearch()"
+      ></at-action-button>
+      }@else {
       <at-action-button [icon]="btn.icon"></at-action-button>
+      }
+    </div>
+    } @if (searchOpen()) {
+    <div class="input-holder">
+      <input
+        type="text"
+        name="search"
+        id="search"
+        placeholder="Type to search..."
+        [(ngModel)]="searchText"
+      />
     </div>
     }
   </article>
