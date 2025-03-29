@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
-import { type LucideIconData } from '../../core/constants/icons.constants';
+import { type LucideIcon } from '../../core/constants/icons.constants';
 import {
   SwitchActionButtonData,
   ModifierActionButtonData,
@@ -38,7 +38,7 @@ export class SummaryComponent {
   searchOpen = signal<boolean>(false);
   searchText = signal<string>('');
 
-  closeSearchIcon: LucideIconData = SearchX;
+  closeSearchIcon: LucideIcon = SearchX;
 
   toggleSearch() {
     this.searchOpen.set(!this.searchOpen());

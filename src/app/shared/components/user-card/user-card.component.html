@@ -1,6 +1,17 @@
+@if (menuOpened()) {
+<div class="backdrop"></div>
+<at-popup-menu></at-popup-menu>
+}
+<at-action-button
+  class="option_icon"
+  [icon]="optionIcon"
+  (click)="toggleMenu($event)"
+></at-action-button>
 <h2>{{ user().name }}</h2>
-<a [href]="user().email" target="_blank">{{ user().email }}</a>
-<div class="manager-div">
+<div class="bg">
+  <a [href]="user().email" target="_blank">{{ user().email }}</a>
+</div>
+<div class="manager-div bg">
   <div class="image">
     <img
       src="https://img.freepik.com/free-vector/young-man-with-glasses-avatar_1308-175763.jpg?t=st=1743091432~exp=1743095032~hmac=4a676fe111e4770b1216e16a773fba963138f93c7fa694d38ebed4c318053881&w=740"
@@ -9,11 +20,15 @@
   </div>
   <span>{{ user().hiringManager }}</span>
 </div>
-<p atHighlight="location" [viewValue]="user().location">
-  {{ user().location }}
-</p>
-<p atHighlight="role" [viewValue]="user().role">{{ user().role }}</p>
-<div class="skills">
+<div class="bg">
+  <p atHighlight="location" [viewValue]="user().location">
+    {{ user().location }}
+  </p>
+</div>
+<div class="bg">
+  <p atHighlight="role" [viewValue]="user().role">{{ user().role }}</p>
+</div>
+<div class="skills bg">
   @for (skill of user().skills; track $index) {
   <p>{{ skill }}</p>
   }

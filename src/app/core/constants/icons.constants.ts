@@ -1,8 +1,8 @@
 import { Search, Group, Table, ArrowUpDown, ListFilter } from 'lucide-angular';
 
-export type LucideIconData = any;
+export type LucideIcon = any;
 
-export const icons: Record<string, LucideIconData> = {
+export const icons: Record<string, LucideIcon> = {
   SEARCH: Search,
   GROUP: Group,
   TABLE: Table,
