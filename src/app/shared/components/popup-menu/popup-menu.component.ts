@@ -1,4 +1,5 @@
 import { Component, input } from '@angular/core';
+import { Applicant } from '../../../features/summary/applicant.model';
 
 @Component({
   selector: 'at-popup-menu',
@@ -6,4 +7,6 @@ import { Component, input } from '@angular/core';
   templateUrl: './popup-menu.component.html',
   styleUrl: './popup-menu.component.scss',
 })
-export class PopupMenuComponent {}
+export class PopupMenuComponent {
+  user = input.required<Applicant>();
+}

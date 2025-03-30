@@ -1,13 +1,14 @@
-@if (menuOpened()) {
+@if (focus()?.id===user().id) {
 <div class="backdrop"></div>
-<at-popup-menu></at-popup-menu>
 }
 <at-action-button
   class="option_icon"
   [icon]="optionIcon"
   (click)="toggleMenu($event)"
 ></at-action-button>
-<h2>{{ user().name }}</h2>
+<div class="bg">
+  <h2>{{ user().name }}</h2>
+</div>
 <div class="bg">
   <a [href]="user().email" target="_blank">{{ user().email }}</a>
 </div>

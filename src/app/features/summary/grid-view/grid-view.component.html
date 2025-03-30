@@ -6,8 +6,17 @@
   </p>
   <article class="list-holder">
     @for (applicant of stage.people; track applicant.id) {
-    <at-user-card [user]="applicant"></at-user-card>
+    <at-user-card [user]="applicant" [(focus)]="focused"></at-user-card>
     }
   </article>
 </section>
+} @if (selectedUser()){
+<at-popup-menu
+  [user]="selectedUser()!"
+  [style]="{
+    top: focused()?.y + 'px',
+    left: focused()?.x + 'px'
+  }"
+></at-popup-menu>
+<div class="backdrop" (click)="clearFocus()"></div>
 }
