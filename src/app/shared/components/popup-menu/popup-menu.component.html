@@ -1,3 +1,23 @@
 <section>
-  <p>{{ user().name }}</p>
+  <at-action-button
+    [icon]="linkIcon"
+    name="Copy link"
+    class="option"
+  ></at-action-button>
+  <at-action-button
+    [icon]="duplicateIcon"
+    name="Duplicate"
+    class="option"
+    (click)="onDuplicate()"
+  ></at-action-button>
+  <at-action-button
+    [icon]="moveIcon"
+    name="Move to"
+    class="option"
+  ></at-action-button>
+  <at-action-button
+    [icon]="deleteIcon"
+    name="Delete"
+    class="option"
+  ></at-action-button>
 </section>

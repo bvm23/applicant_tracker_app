@@ -1,9 +1,21 @@
+@use "../../../../sass/colors" as c;
+
 :host {
   position: absolute;
   z-index: 16;
 }
 
 section {
-  width: 18rem;
-  background-color: blueviolet;
+  min-width: 16rem;
+  background-color: c.$bg_2;
+  border: 1px solid c.$bg_3;
+  border-radius: 0.4rem;
+}
+
+.option {
+  justify-content: flex-start;
+  gap: 0.8rem;
+  margin: 0.2rem;
+  padding: 0.4rem;
+  font-weight: 100;
 }
