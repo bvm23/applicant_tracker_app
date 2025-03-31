@@ -17,6 +17,7 @@
     top: focused()?.y + 'px',
     left: focused()?.x + 'px'
   }"
+  (close)="clearFocus()"
 ></at-popup-menu>
 <div class="backdrop" (click)="clearFocus()"></div>
 }

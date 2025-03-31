@@ -1,7 +1,7 @@
 import { Directive, ElementRef, inject, input } from '@angular/core';
 
 @Directive({
-  selector: '[atHighlight]',
+  selector: '[atHighlight], at-action-button[atHighlight]',
 })
 export class HighlightDirective {
   private el = inject(ElementRef) as ElementRef<
@@ -19,6 +19,7 @@ export class HighlightDirective {
 
   viewFor = input<string>('', { alias: 'atHighlight' });
   viewValue = input<string>();
+  fontSize = input<string>();
 
   setHighlight() {
     let color = '';
@@ -89,8 +90,11 @@ export class HighlightDirective {
     this.el.nativeElement.style.borderRadius = '0.2rem';
     this.el.nativeElement.style.fontWeight =
       this.viewFor() === 'stage' ? '500' : '400';
-    this.el.nativeElement.style.fontSize =
-      this.viewFor() === 'stage' ? '1rem' : '0.8rem';
+    this.el.nativeElement.style.fontSize = this.fontSize()
+      ? this.fontSize()!
+      : this.viewFor() === 'stage'
+      ? '1rem'
+      : '0.8rem';
   }
 
   ngOnInit() {

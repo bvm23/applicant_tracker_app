@@ -15,16 +15,20 @@ export class ApplicantService {
   allApplicants = this.applicants.asReadonly();
 
   addApplicant(user: Applicant, isDuplicate: boolean = false) {
-    let duplicateUser: Applicant;
-    if (isDuplicate) {
-      duplicateUser = { ...user };
-      let newUserId = Math.random().toString();
-      duplicateUser.id = newUserId;
+    let newUser = isDuplicate
+      ? { ...user, id: Math.random().toString() }
+      : user;
+    this.applicants.update((existing) => [...existing, newUser]);
+  }
+
+  updateApplicant(userId: string, newData: Record<string, string>) {
+    const applicantsList = this.applicants();
+    const user = applicantsList.find((usr) => usr.id === userId);
+
+    if (user) {
+      Object.assign(user, newData);
+      this.applicants.set([...applicantsList]);
     }
-    this.applicants.update((existing) => [
-      ...existing,
-      isDuplicate ? duplicateUser : user,
-    ]);
   }
 
   deletApplicant(userId: string) {
