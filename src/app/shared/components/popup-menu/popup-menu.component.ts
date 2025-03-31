@@ -19,7 +19,10 @@ export class PopupMenuComponent {
   deleteIcon = Trash2;
 
   onDuplicate() {
-    console.log('duplicate');
     this.apService.addApplicant(this.user(), true);
+  }
+
+  onDelete() {
+    this.apService.deletApplicant(this.user().id);
   }
 }

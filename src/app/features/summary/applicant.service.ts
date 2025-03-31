@@ -25,6 +25,9 @@ export class ApplicantService {
       ...existing,
       isDuplicate ? duplicateUser : user,
     ]);
-    console.log(this.applicants());
+  }
+
+  deletApplicant(userId: string) {
+    this.applicants.set(this.applicants().filter((appl) => appl.id !== userId));
   }
 }
