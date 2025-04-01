@@ -20,7 +20,11 @@ export class UserCardComponent {
 
   optionIcon: LucideIcon = Ellipsis;
 
-  toggleMenu(e: MouseEvent) {
-    this.focusChange.emit({ id: this.user().id, x: e.x, y: e.y });
+  toggleMenu() {
+    this.focusChange.emit({
+      id: this.user().id,
+      x: this.el.nativeElement.offsetLeft + this.el.nativeElement.offsetWidth,
+      y: this.el.nativeElement.offsetTop,
+    });
   }
 }

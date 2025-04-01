@@ -19,5 +19,9 @@
   }"
   (close)="clearFocus()"
 ></at-popup-menu>
-<div class="backdrop" (click)="clearFocus()"></div>
+<div
+  class="backdrop"
+  [style]="{ minHeight: '100vh', height: focused()?.y + 'px' }"
+  (click)="clearFocus()"
+></div>
 }
