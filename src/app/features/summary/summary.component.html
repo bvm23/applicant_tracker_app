@@ -35,6 +35,7 @@
         id="search"
         placeholder="Type to search..."
         [(ngModel)]="searchText"
+        (ngModelChange)="debouncedTextChange()"
       />
     </div>
     }

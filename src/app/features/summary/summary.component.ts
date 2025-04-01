@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
 import { type LucideIcon } from '../../core/constants/icons.constants';
 import {
@@ -9,6 +9,8 @@ import { SearchX, LucideAngularModule } from 'lucide-angular';
 
 import { SummaryContentComponent } from './summary-content/summary-content.component';
 import { FormsModule } from '@angular/forms';
+import { FilterService } from '../../shared/services/filter.service';
+import { debounce } from '../../shared/utils/utils';
 
 @Component({
   selector: 'at-summary',
@@ -22,6 +24,11 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './summary.component.scss',
 })
 export class SummaryComponent {
+  private filterService = inject(FilterService);
+  searchText = signal<string>('');
+  selectedView = signal<string>('STAGE');
+  searchOpen = signal<boolean>(false);
+
   switchButtons: {
     icon: string;
     name: string;
@@ -34,16 +41,17 @@ export class SummaryComponent {
     view: string;
   }[] = ModifierActionButtonData;
 
-  selectedView = signal<string>('STAGE');
-  searchOpen = signal<boolean>(false);
-  searchText = signal<string>('');
-
   closeSearchIcon: LucideIcon = SearchX;
 
   toggleSearch() {
     this.searchOpen.set(!this.searchOpen());
-    this.searchText.set('');
   }
+
+  onSearchTextChange() {
+    this.filterService.addCriteria('search', this.searchText().trim());
+  }
+
+  debouncedTextChange = debounce(this.onSearchTextChange.bind(this), 500);
 
   onClick(view: string) {
     this.selectedView.set(view);

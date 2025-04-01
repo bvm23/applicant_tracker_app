@@ -1,10 +1,11 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Stages } from '../../../core/constants/data.constants';
 import { ApplicantService } from '../applicant.service';
 import { Applicant } from '../applicant.model';
 import { UserCardComponent } from '../../../shared/components/user-card/user-card.component';
 import { HighlightDirective } from '../../../shared/directives/highlight.directive';
 import { PopupMenuComponent } from '../../../shared/components/popup-menu/popup-menu.component';
+import { FilterService } from '../../../shared/services/filter.service';
 
 @Component({
   selector: 'at-grid-view',
@@ -14,6 +15,7 @@ import { PopupMenuComponent } from '../../../shared/components/popup-menu/popup-
 })
 export class GridViewComponent {
   private apService = inject(ApplicantService);
+  private filterService = inject(FilterService);
 
   applicants = this.apService.allApplicants;
   stages = Stages;
@@ -24,8 +26,10 @@ export class GridViewComponent {
     this.applicants().find((appl) => appl.id === this.focused()?.id)
   );
 
-  applicantByStages = computed(() =>
-    this.stages.map((stage) => {
+  applicantByStages = computed(() => {
+    let applicantsList = this.filterService.filteredBySearch();
+
+    return this.stages.map((stage) => {
       let stageData: {
         name: string;
         value: string;
@@ -37,14 +41,14 @@ export class GridViewComponent {
         people: [],
         peopleCount: 0,
       };
-      let filteredApplicants = this.applicants().filter(
+      let filteredApplicants = applicantsList.filter(
         (ap) => ap.stage === stage.value
       );
       stageData.people = filteredApplicants;
       stageData.peopleCount = filteredApplicants.length;
       return stageData;
-    })
-  );
+    });
+  });
 
   clearFocus() {
     this.focused.set(undefined);
