@@ -46,7 +46,6 @@ export class PopupMenuComponent {
   }
 
   onMove(newStage: string) {
-    console.log('onmove' + newStage);
     this.apService.updateApplicant(this.user().id, { stage: newStage });
     this.closeMenu();
   }

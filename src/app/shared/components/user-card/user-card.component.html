@@ -6,13 +6,13 @@
   [icon]="optionIcon"
   (click)="toggleMenu()"
 ></at-action-button>
-<div class="bg">
+<div class="bg" title="Name">
   <h2>{{ user().name }}</h2>
 </div>
-<div class="bg">
+<div class="bg" title="Email">
   <a [href]="user().email" target="_blank">{{ user().email }}</a>
 </div>
-<div class="manager-div bg">
+<div class="manager-div bg" title="Hiring Manager">
   <div class="image">
     <img
       src="https://img.freepik.com/free-vector/young-man-with-glasses-avatar_1308-175763.jpg?t=st=1743091432~exp=1743095032~hmac=4a676fe111e4770b1216e16a773fba963138f93c7fa694d38ebed4c318053881&w=740"
@@ -21,15 +21,15 @@
   </div>
   <span>{{ user().hiringManager }}</span>
 </div>
-<div class="bg">
+<div class="bg" title="Location">
   <p atHighlight="location" [viewValue]="user().location">
     {{ user().location }}
   </p>
 </div>
-<div class="bg">
+<div class="bg" title="Role">
   <p atHighlight="role" [viewValue]="user().role">{{ user().role }}</p>
 </div>
-<div class="skills bg">
+<div class="skills bg" title="Skills">
   @for (skill of user().skills; track $index) {
   <p>{{ skill }}</p>
   }
