@@ -8,7 +8,7 @@ import { SummaryComponent } from './features/summary/summary.component';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  imports: [HeaderComponent, ActionButtonComponent, SummaryComponent],
+  imports: [HeaderComponent, SummaryComponent],
 })
 export class AppComponent {
   title = 'applicant_tracker';

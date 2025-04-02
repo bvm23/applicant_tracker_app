@@ -20,6 +20,7 @@
     <div [title]="btn.name">
       @if (btn.name==='search') {
       <at-action-button
+        [color]="searchOpen() || searchText() ? '#4361ee' : '#7e7c7c'"
         [icon]="searchOpen() ? closeSearchIcon : btn.icon"
         (click)="toggleSearch()"
       ></at-action-button>
