@@ -26,7 +26,7 @@ export class GridViewComponent {
     this.applicants().find((appl) => appl.id === this.focused()?.id)
   );
 
-  applicantByStages = computed(() => {
+  generateApplicantListByStage() {
     let applicantsList = this.filterService.filteredBySearch();
 
     return this.stages.map((stage) => {
@@ -48,7 +48,9 @@ export class GridViewComponent {
       stageData.peopleCount = filteredApplicants.length;
       return stageData;
     });
-  });
+  }
+
+  applicantByStages = computed(() => this.generateApplicantListByStage());
 
   clearFocus() {
     this.focused.set(undefined);

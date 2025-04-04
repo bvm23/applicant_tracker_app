@@ -22,8 +22,8 @@ export class FilterService {
     this.mainCriteria.set({ option: givenOption, value: givenValue });
   }
 
-  filteredBySearch = computed(() =>
-    this.apService.allApplicants().filter((appl: Applicant) => {
+  filteredBySearch() {
+    return this.apService.allApplicants().filter((appl: Applicant) => {
       let add = Object.keys(appl).filter((keyVal) => {
         let kval = keyVal as keyof Applicant;
         let value = appl[kval];
@@ -37,6 +37,6 @@ export class FilterService {
         return value.includes(this.mainCriteria().value.toLowerCase()) && true;
       });
       return add.length > 0 && appl;
-    })
-  );
+    });
+  }
 }
