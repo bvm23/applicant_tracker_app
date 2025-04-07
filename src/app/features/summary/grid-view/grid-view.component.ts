@@ -4,12 +4,12 @@ import { ApplicantService } from '../applicant.service';
 import { Applicant } from '../applicant.model';
 import { UserCardComponent } from '../../../shared/components/user-card/user-card.component';
 import { HighlightDirective } from '../../../shared/directives/highlight.directive';
-import { PopupMenuComponent } from '../../../shared/components/popup-menu/popup-menu.component';
 import { FilterService } from '../../../shared/services/filter.service';
+import { CardMenuComponent } from '../../../shared/components/popup-menu/card-menu/card-menu.component';
 
 @Component({
   selector: 'at-grid-view',
-  imports: [UserCardComponent, HighlightDirective, PopupMenuComponent],
+  imports: [UserCardComponent, HighlightDirective, CardMenuComponent],
   templateUrl: './grid-view.component.html',
   styleUrl: './grid-view.component.scss',
 })

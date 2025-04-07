@@ -4,7 +4,7 @@
 <at-action-button
   class="option_icon"
   [icon]="optionIcon"
-  (click)="toggleMenu()"
+  (click)="toggleMenu($event)"
 ></at-action-button>
 <div class="bg" title="Name">
   <h2>{{ user().name }}</h2>

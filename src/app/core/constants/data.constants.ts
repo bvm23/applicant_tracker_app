@@ -144,3 +144,5 @@ export const Stages = [
   { name: 'Offer', value: 'offer' },
   { name: 'Hired', value: 'hired' },
 ];
+
+export const Keys = Object.keys(Data[1]).filter((valKey) => valKey !== 'id');

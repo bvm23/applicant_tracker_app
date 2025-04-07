@@ -11,17 +11,13 @@
   </article>
 </section>
 } @if (selectedUser()){
-<at-popup-menu
+<at-card-menu
   [user]="selectedUser()!"
   [style]="{
     top: focused()?.y + 'px',
     left: focused()?.x + 'px'
   }"
   (close)="clearFocus()"
-></at-popup-menu>
-<div
-  class="backdrop"
-  [style]="{ minHeight: '100vh', height: focused()?.y + 'px' }"
-  (click)="clearFocus()"
-></div>
+></at-card-menu>
+<div class="backdrop" (click)="clearFocus()"></div>
 }
