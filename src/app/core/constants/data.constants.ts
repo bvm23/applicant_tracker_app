@@ -14,7 +14,7 @@ export const Data = [
     location: 'new york',
     employment: 'employed',
     source: 'angellist',
-    added: '24/03/2025, 22:07:07',
+    added: '2025-04-08T06:35:58.000Z',
   },
   {
     id: '0.11259289307257735',
@@ -29,7 +29,7 @@ export const Data = [
     location: 'san francisco',
     employment: 'looking',
     source: 'cold inbound',
-    added: '24/03/2025, 22:07:07',
+    added: '2025-04-08T10:22:15.000Z',
   },
   {
     id: '0.11259289307057725',
@@ -44,7 +44,7 @@ export const Data = [
     location: 'san francisco',
     employment: 'looking',
     source: 'referral',
-    added: '24/03/2025, 22:07:07',
+    added: '2025-04-09T14:30:42.123Z',
   },
   {
     id: '0.1125928931257725',
@@ -59,7 +59,7 @@ export const Data = [
     location: 'tokyo',
     employment: 'employed',
     source: 'referral',
-    added: '24/03/2025, 22:07:07',
+    added: '2025-04-10T03:00:00.000Z',
   },
   {
     id: '0.11259289307457725',
@@ -74,7 +74,7 @@ export const Data = [
     location: 'new york',
     employment: 'freelance',
     source: 'cold inbound',
-    added: '24/03/2025, 22:07:07',
+    added: '2025-04-12T21:59:59.999Z',
   },
   {
     id: '0.11259289307227725',
@@ -89,7 +89,7 @@ export const Data = [
     location: 'new york',
     employment: 'looking',
     source: 'referral',
-    added: '24/03/2025, 22:07:07',
+    added: '2025-05-01T12:00:00.000Z',
   },
 ];
 
