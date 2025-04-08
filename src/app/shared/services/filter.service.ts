@@ -16,10 +16,25 @@ export class FilterService {
     value: '',
   });
 
+  private _sortCriteria = signal<{
+    key: string | undefined;
+    order: 'asc' | 'desc';
+  }>({ key: 'added', order: 'desc' });
+
   criteria = this.mainCriteria.asReadonly();
+  sortCriteria = this._sortCriteria.asReadonly();
 
   addCriteria(givenOption: string, givenValue: string) {
     this.mainCriteria.set({ option: givenOption, value: givenValue });
+  }
+
+  addSortCriteria(sortData: {
+    key: string | undefined;
+    order: 'asc' | 'desc';
+  }) {
+    this._sortCriteria.set(sortData);
+
+    console.log(this._sortCriteria());
   }
 
   filteredBySearch() {

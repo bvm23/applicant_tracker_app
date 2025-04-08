@@ -1,0 +1,66 @@
+@use "../../../../sass/colors" as c;
+
+.filter-container {
+  margin: 0.6rem 0;
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  gap: 1rem;
+  position: relative;
+  z-index: 14;
+
+  .selected-option {
+    background-color: rgba(3, 75, 119, 0.3);
+    border-radius: 2rem;
+    display: flex;
+    justify-content: center;
+    border: 1px solid c.$blue;
+    padding: 0.2rem 0.6rem;
+
+    &:hover {
+      background-color: rgba(3, 75, 119, 0.4);
+    }
+  }
+
+  .option-detail {
+    position: absolute;
+    bottom: -5.2rem;
+    left: 0;
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.2rem;
+      justify-content: space-around;
+      align-items: center;
+      margin: 0.2rem;
+
+      #order,
+      #key {
+        background-color: c.$bg_1;
+        border: 1px solid c.$bg_3;
+        border-radius: 0.4rem;
+        padding: 0.4rem;
+        text-align: center;
+        color: c.$text_2;
+        text-transform: capitalize;
+        outline: none;
+        cursor: pointer;
+
+        &:hover {
+          background-color: c.$bg_2;
+        }
+
+        option {
+          text-transform: capitalize;
+          text-align: left;
+        }
+      }
+    }
+
+    .delete-sort {
+      margin-top: 0.4rem;
+      gap: 0.6rem;
+    }
+  }
+}

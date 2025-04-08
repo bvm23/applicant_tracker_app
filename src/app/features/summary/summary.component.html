@@ -18,15 +18,21 @@
   <article class="modifier-action-buttons">
     @for(btn of modifierButtons; track $index){
     <div [title]="btn.name">
-      @if (btn.name==='search') {
+      @switch (btn.name) { @case ('search') {
       <at-action-button
         [color]="searchOpen() || searchText() ? '#4361ee' : '#7e7c7c'"
         [icon]="searchOpen() ? closeSearchIcon : btn.icon"
         (click)="toggleSearch()"
       ></at-action-button>
-      }@else {
+      } @case ('sort') {
+      <at-action-button
+        [color]="sortOpen() ? '#4361ee' : '#7e7c7c'"
+        [icon]="btn.icon"
+        (click)="toggleFilterTab()"
+      ></at-action-button>
+      } @default {
       <at-action-button [icon]="btn.icon"></at-action-button>
-      }
+      } }
     </div>
     } @if (searchOpen()) {
     <div class="input-holder">
@@ -42,4 +48,7 @@
     }
   </article>
 </section>
+@if (sortOpen()) {
+<at-filter-tab></at-filter-tab>
+}
 <at-summary-content [view]="selectedView()"></at-summary-content>

@@ -1,0 +1,60 @@
+<section class="filter-container">
+  <at-action-button
+    [icon]="
+      this.selectedSortCriteria().order === 'asc' ? upArrowIcon : downArrowIcon
+    "
+    [name]="this.selectedSortCriteria().key"
+    color="#22648d"
+    class="selected-option"
+    (click)="toggleSelectingOption()"
+  ></at-action-button>
+  @if (isSelectingOption()) {
+  <at-popup-menu class="option-detail">
+    <div class="controls">
+      <select
+        name="key"
+        id="key"
+        (change)="onSelectOption()"
+        [(ngModel)]="newSortCriteria.key"
+      >
+        @for (key of keys; track $index) {
+        <option [value]="key">
+          {{
+            key === "hiringManager"
+              ? "Hiring Manager"
+              : key.split("")[0].toUpperCase() +
+                key.split("").splice(1, key.length).join("")
+          }}
+        </option>
+        }
+      </select>
+      <select
+        name="order"
+        id="order"
+        (change)="onSelectOption()"
+        [(ngModel)]="newSortCriteria.order"
+      >
+        <option
+          value="desc"
+          class="opt"
+          [selected]="this.selectedSortCriteria().order === 'desc'"
+        >
+          Descending
+        </option>
+        <option
+          value="asc"
+          [selected]="this.selectedSortCriteria().order === 'asc'"
+        >
+          Ascending
+        </option>
+      </select>
+    </div>
+    <at-action-button
+      [icon]="deleteIcon"
+      name="Delete Sort"
+      class="delete-sort"
+      color="#c72326"
+    ></at-action-button>
+  </at-popup-menu>
+  }
+</section>

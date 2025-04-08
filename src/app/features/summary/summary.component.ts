@@ -11,6 +11,7 @@ import { SummaryContentComponent } from './summary-content/summary-content.compo
 import { FormsModule } from '@angular/forms';
 import { FilterService } from '../../shared/services/filter.service';
 import { debounce } from '../../shared/utils/utils';
+import { FilterTabComponent } from './filter-tab/filter-tab.component';
 
 @Component({
   selector: 'at-summary',
@@ -19,6 +20,7 @@ import { debounce } from '../../shared/utils/utils';
     SummaryContentComponent,
     LucideAngularModule,
     FormsModule,
+    FilterTabComponent,
   ],
   templateUrl: './summary.component.html',
   styleUrl: './summary.component.scss',
@@ -28,6 +30,7 @@ export class SummaryComponent {
   searchText = signal<string>('');
   selectedView = signal<string>('STAGE');
   searchOpen = signal<boolean>(false);
+  sortOpen = signal<boolean>(true);
 
   switchButtons: {
     icon: string;
@@ -45,6 +48,10 @@ export class SummaryComponent {
 
   toggleSearch() {
     this.searchOpen.set(!this.searchOpen());
+  }
+
+  toggleFilterTab() {
+    this.sortOpen.set(!this.sortOpen());
   }
 
   onSearchTextChange() {
