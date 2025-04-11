@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  ElementRef,
-  inject,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import {
   ArrowDown,
   ArrowUp,
@@ -16,30 +9,18 @@ import { ActionButtonComponent } from '../../../shared/components/action-button/
 import { PopupMenuComponent } from '../../../shared/components/popup-menu/popup-menu.component';
 import { Keys } from '../../../core/constants/data.constants';
 import { FilterService } from '../../../shared/services/filter.service';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'at-filter-tab',
-  imports: [
-    LucideAngularModule,
-    ActionButtonComponent,
-    PopupMenuComponent,
-    FormsModule,
-  ],
+  imports: [LucideAngularModule, ActionButtonComponent, PopupMenuComponent],
   templateUrl: './filter-tab.component.html',
   styleUrl: './filter-tab.component.scss',
 })
 export class FilterTabComponent {
   private filterService = inject(FilterService);
   isSelectingOption = signal<boolean>(false);
-  selectedSortCriteria = computed(() => this.filterService.sortCriteria());
-  newKey = viewChild<ElementRef<HTMLSelectElement>>('selectedKey');
-  newOrder = viewChild<ElementRef<HTMLSelectElement>>('selectedOrder');
-
-  newSortCriteria: { key: string | undefined; order: 'asc' | 'desc' } = {
-    key: this.selectedSortCriteria().key,
-    order: this.selectedSortCriteria().order,
-  };
+  deleteSort = output();
+  sortCriteria = this.filterService.sortCriteria;
 
   downArrowIcon = ArrowDown;
   upArrowIcon = ArrowUp;
@@ -50,7 +31,19 @@ export class FilterTabComponent {
     this.isSelectingOption.set(!this.isSelectingOption());
   }
 
-  onSelectOption() {
-    this.filterService.addSortCriteria(this.newSortCriteria);
+  onSelectOption(e: Event, target: 'key' | 'order') {
+    const selectedValue = (e.target as HTMLSelectElement).value;
+    const newKey = target === 'key' ? selectedValue : this.sortCriteria().key!;
+    const newOrder =
+      target === 'order' ? selectedValue : this.sortCriteria().order;
+
+    this.filterService.addSortCriteria({
+      key: newKey,
+      order: newOrder as 'asc' | 'desc',
+    });
+  }
+
+  onDeleteSort() {
+    this.deleteSort.emit();
   }
 }

@@ -6,9 +6,7 @@ import { ApplicantService } from '../../features/summary/applicant.service';
   providedIn: 'root',
 })
 export class FilterService {
-  private apService = inject(ApplicantService);
-
-  private mainCriteria = signal<{
+  private mainFilterCriteria = signal<{
     option: keyof Applicant | string;
     value: string;
   }>({
@@ -16,42 +14,56 @@ export class FilterService {
     value: '',
   });
 
-  private _sortCriteria = signal<{
+  private mainSortCriteria = signal<{
     key: string | undefined;
     order: 'asc' | 'desc';
   }>({ key: 'added', order: 'desc' });
 
-  criteria = this.mainCriteria.asReadonly();
-  sortCriteria = this._sortCriteria.asReadonly();
+  filterCriteria = this.mainFilterCriteria.asReadonly();
+  sortCriteria = this.mainSortCriteria.asReadonly();
 
   addCriteria(givenOption: string, givenValue: string) {
-    this.mainCriteria.set({ option: givenOption, value: givenValue });
+    this.mainFilterCriteria.set({ option: givenOption, value: givenValue });
   }
 
-  addSortCriteria(sortData: {
-    key: string | undefined;
-    order: 'asc' | 'desc';
-  }) {
-    this._sortCriteria.set(sortData);
-
-    console.log(this._sortCriteria());
+  addSortCriteria(sortData: { key: string; order: 'asc' | 'desc' }) {
+    this.mainSortCriteria.set(sortData);
   }
 
-  filteredBySearch() {
-    return this.apService.allApplicants().filter((appl: Applicant) => {
+  sort(applicants: Applicant[]) {
+    return [...applicants].sort((a, b) => {
+      if (this.mainSortCriteria().order === 'asc') {
+        return new Date(a.added).getTime() - new Date(b.added).getTime();
+      } else {
+        return new Date(b.added).getTime() - new Date(a.added).getTime();
+      }
+    });
+  }
+
+  filterBySearch(applicantList: Applicant[]) {
+    return applicantList.filter((appl: Applicant) => {
       let add = Object.keys(appl).filter((keyVal) => {
         let kval = keyVal as keyof Applicant;
         let value = appl[kval];
         if (typeof value === 'object') {
           return (
             value.find((val) =>
-              val.includes(this.mainCriteria().value.toLowerCase())
+              val.includes(this.mainFilterCriteria().value.toLowerCase())
             ) && true
           );
         }
-        return value.includes(this.mainCriteria().value.toLowerCase()) && true;
+        return (
+          value.includes(this.mainFilterCriteria().value.toLowerCase()) && true
+        );
       });
       return add.length > 0 && appl;
     });
+  }
+
+  removeSortCriteria() {
+    this.mainSortCriteria.update((current) => ({
+      ...current,
+      key: undefined,
+    }));
   }
 }

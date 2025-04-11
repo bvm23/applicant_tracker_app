@@ -1,9 +1,7 @@
 <section class="filter-container">
   <at-action-button
-    [icon]="
-      this.selectedSortCriteria().order === 'asc' ? upArrowIcon : downArrowIcon
-    "
-    [name]="this.selectedSortCriteria().key"
+    [icon]="this.sortCriteria().order === 'asc' ? upArrowIcon : downArrowIcon"
+    [name]="this.sortCriteria().key"
     color="#22648d"
     class="selected-option"
     (click)="toggleSelectingOption()"
@@ -11,14 +9,9 @@
   @if (isSelectingOption()) {
   <at-popup-menu class="option-detail">
     <div class="controls">
-      <select
-        name="key"
-        id="key"
-        (change)="onSelectOption()"
-        [(ngModel)]="newSortCriteria.key"
-      >
+      <select name="key" id="key" (change)="onSelectOption($event, 'key')">
         @for (key of keys; track $index) {
-        <option [value]="key">
+        <option [value]="key" [selected]="key === this.sortCriteria().key">
           {{
             key === "hiringManager"
               ? "Hiring Manager"
@@ -31,20 +24,16 @@
       <select
         name="order"
         id="order"
-        (change)="onSelectOption()"
-        [(ngModel)]="newSortCriteria.order"
+        (change)="onSelectOption($event, 'order')"
       >
         <option
           value="desc"
           class="opt"
-          [selected]="this.selectedSortCriteria().order === 'desc'"
+          [selected]="this.sortCriteria().order === 'desc'"
         >
           Descending
         </option>
-        <option
-          value="asc"
-          [selected]="this.selectedSortCriteria().order === 'asc'"
-        >
+        <option value="asc" [selected]="this.sortCriteria().order === 'asc'">
           Ascending
         </option>
       </select>
@@ -54,6 +43,7 @@
       name="Delete Sort"
       class="delete-sort"
       color="#c72326"
+      (click)="onDeleteSort()"
     ></at-action-button>
   </at-popup-menu>
   }

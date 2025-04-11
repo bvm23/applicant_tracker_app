@@ -26,9 +26,9 @@
       ></at-action-button>
       } @case ('sort') {
       <at-action-button
-        [color]="sortOpen() ? '#4361ee' : '#7e7c7c'"
+        [color]="sortCriteria().key ? '#4361ee' : '#7e7c7c'"
         [icon]="btn.icon"
-        (click)="toggleFilterTab()"
+        (click)="toggleSortTab()"
       ></at-action-button>
       } @default {
       <at-action-button [icon]="btn.icon"></at-action-button>
@@ -48,7 +48,7 @@
     }
   </article>
 </section>
-@if (sortOpen()) {
-<at-filter-tab></at-filter-tab>
+@if (sortIsActive) {
+<at-filter-tab (deleteSort)="clearSort()"></at-filter-tab>
 }
 <at-summary-content [view]="selectedView()"></at-summary-content>

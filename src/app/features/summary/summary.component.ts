@@ -32,6 +32,8 @@ export class SummaryComponent {
   searchOpen = signal<boolean>(false);
   sortOpen = signal<boolean>(true);
 
+  sortCriteria = this.filterService.sortCriteria;
+
   switchButtons: {
     icon: string;
     name: string;
@@ -46,11 +48,18 @@ export class SummaryComponent {
 
   closeSearchIcon: LucideIcon = SearchX;
 
+  get sortIsActive() {
+    return this.sortOpen() && this.sortCriteria().key;
+  }
+
   toggleSearch() {
     this.searchOpen.set(!this.searchOpen());
   }
 
-  toggleFilterTab() {
+  toggleSortTab() {
+    if (!this.sortCriteria().key) {
+      this.filterService.addSortCriteria({ key: 'added', order: 'desc' });
+    }
     this.sortOpen.set(!this.sortOpen());
   }
 
@@ -62,5 +71,10 @@ export class SummaryComponent {
 
   onClick(view: string) {
     this.selectedView.set(view);
+  }
+
+  clearSort() {
+    this.filterService.removeSortCriteria();
+    this.sortOpen.set(false);
   }
 }

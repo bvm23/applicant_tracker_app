@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Applicant } from './applicant.model';
-import { Data } from '../../core/constants/data.constants';
+import { Data, Stages } from '../../core/constants/data.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +13,29 @@ export class ApplicantService {
   }
 
   allApplicants = this.applicants.asReadonly();
+  stages = Stages;
+
+  getApplicantsByStage(applicants: Applicant[]) {
+    return this.stages.map((stage) => {
+      let stageData: {
+        name: string;
+        value: string;
+        people: Applicant[];
+        peopleCount: number;
+      } = {
+        name: stage.name,
+        value: stage.value,
+        people: [],
+        peopleCount: 0,
+      };
+      let filteredApplicants = applicants.filter(
+        (ap) => ap.stage === stage.value
+      );
+      stageData.people = filteredApplicants;
+      stageData.peopleCount = filteredApplicants.length;
+      return stageData;
+    });
+  }
 
   addApplicant(user: Applicant, isDuplicate: boolean = false) {
     let newUser = isDuplicate
