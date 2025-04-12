@@ -25,7 +25,9 @@ export class FilterTabComponent {
   downArrowIcon = ArrowDown;
   upArrowIcon = ArrowUp;
   deleteIcon = Trash2;
-  keys = Keys;
+  keys = Keys.filter(
+    (valKey) => !['stage', 'website', 'employment', 'source'].includes(valKey)
+  );
 
   toggleSelectingOption() {
     this.isSelectingOption.set(!this.isSelectingOption());

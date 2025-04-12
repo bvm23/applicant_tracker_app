@@ -1,6 +1,5 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Applicant } from '../../features/summary/applicant.model';
-import { ApplicantService } from '../../features/summary/applicant.service';
 
 @Injectable({
   providedIn: 'root',
@@ -31,12 +30,39 @@ export class FilterService {
   }
 
   sort(applicants: Applicant[]) {
+    const sortKey = this.mainSortCriteria().key as keyof Applicant;
+    const sortOrder = this.mainSortCriteria().order;
+
     return [...applicants].sort((a, b) => {
-      if (this.mainSortCriteria().order === 'asc') {
-        return new Date(a.added).getTime() - new Date(b.added).getTime();
-      } else {
-        return new Date(b.added).getTime() - new Date(a.added).getTime();
+      const valA = a[sortKey];
+      const valB = b[sortKey];
+
+      // no sort case
+      if (!sortKey) {
+        return 0;
       }
+      // sort list using added time
+      if (sortKey === 'added') {
+        return sortOrder === 'asc'
+          ? new Date(a.added).getTime() - new Date(b.added).getTime()
+          : new Date(b.added).getTime() - new Date(a.added).getTime();
+      }
+
+      // sort list using the number of skills
+      if (sortKey === 'skills') {
+        return sortOrder === 'asc'
+          ? a.skills.length - b.skills.length
+          : b.skills.length - a.skills.length;
+      }
+
+      // common sort case
+      return sortOrder === 'asc'
+        ? valA > valB
+          ? 1
+          : -1
+        : valB > valA
+        ? 1
+        : -1;
     });
   }
 

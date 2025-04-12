@@ -55,7 +55,7 @@ export const Data = [
     hiringManager: 'jenne nguyen',
     attachments: '',
     website: 'timbakshi.com',
-    skills: ['writing', 'social'],
+    skills: ['writing', 'social', 'excel'],
     location: 'tokyo',
     employment: 'employed',
     source: 'referral',
