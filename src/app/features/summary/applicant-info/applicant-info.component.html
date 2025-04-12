@@ -1,0 +1,44 @@
+<section>
+  <article class="controls">
+    <at-action-button
+      [icon]="closeBtnIcon"
+      [size]="18"
+      title="Close"
+      (click)="onClose()"
+    />
+  </article>
+  <article class="info">
+    <h1>{{ applicant()?.name }}</h1>
+    <div class="property-container">
+      @for (entry of entries(); track $index) {
+      <div class="property">
+        <p class="key" [title]="entry[0]">{{ entry[0] }}</p>
+        <p
+          [class]="{ value: true, 'empty-value': !entry[1] }"
+          [title]="entry[1]"
+        >
+          {{
+            entry[0] === "added"
+              ? (entry[1] | date : "medium")
+              : entry[1]
+              ? entry[1]
+              : "empty"
+          }}
+        </p>
+      </div>
+      }
+    </div>
+    <article class="extras">
+      <div class="comments">
+        <h5>Comments</h5>
+        <input
+          type="text"
+          name="comment"
+          id="comment"
+          placeholder="Add a comment..."
+        />
+        <div class="comments-container"></div>
+      </div>
+    </article>
+  </article>
+</section>

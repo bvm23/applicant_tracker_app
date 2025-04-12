@@ -16,7 +16,7 @@ export class GridViewComponent {
   private apService = inject(ApplicantService);
   private filterService = inject(FilterService);
   focused = signal<{ id: string; x: number; y: number } | undefined>(undefined);
-  selectedUser = computed(() =>
+  focusedUser = computed(() =>
     this.applicants().find((appl) => appl.id === this.focused()?.id)
   );
 

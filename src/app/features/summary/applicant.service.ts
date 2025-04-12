@@ -1,19 +1,21 @@
 import { Injectable, signal } from '@angular/core';
 import { Applicant } from './applicant.model';
 import { Data, Stages } from '../../core/constants/data.constants';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApplicantService {
   private applicants = signal<Applicant[]>([]);
+  selectedApplicant$ = new BehaviorSubject<Applicant | undefined>(undefined);
 
   constructor() {
     this.applicants.set(Data);
   }
 
-  allApplicants = this.applicants.asReadonly();
   stages = Stages;
+  allApplicants = this.applicants.asReadonly();
 
   getApplicantsByStage(applicants: Applicant[]) {
     return this.stages.map((stage) => {
@@ -44,6 +46,13 @@ export class ApplicantService {
     this.applicants.update((existing) => [...existing, newUser]);
   }
 
+  selectApplicant(userId: string) {
+    const applicant = this.applicants().find((ap) => ap.id === userId);
+    if (applicant) {
+      this.selectedApplicant$.next(applicant);
+    }
+  }
+
   updateApplicant(userId: string, newData: Record<string, string>) {
     const applicantsList = this.applicants();
     const user = applicantsList.find((usr) => usr.id === userId);
@@ -56,5 +65,9 @@ export class ApplicantService {
 
   deletApplicant(userId: string) {
     this.applicants.set(this.applicants().filter((appl) => appl.id !== userId));
+  }
+
+  removeSelectedApplicant() {
+    this.selectedApplicant$.next(undefined);
   }
 }

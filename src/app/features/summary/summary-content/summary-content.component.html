@@ -2,4 +2,6 @@
 <at-grid-view></at-grid-view>
 }@else {
 <at-table-view></at-table-view>
+} @if (applicantIsSelected()) {
+<at-applicant-info [applicant]="selectedApplicant()"></at-applicant-info>
 }

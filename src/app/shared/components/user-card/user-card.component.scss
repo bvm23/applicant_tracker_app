@@ -38,6 +38,10 @@
     }
   }
 
+  &:active {
+    background-color: c.$bg_1;
+  }
+
   .bg {
     padding: 0.3rem;
     border-radius: 0.3rem;

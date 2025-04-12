@@ -1,0 +1,92 @@
+@use "../../../../sass/colors" as c;
+
+section {
+  background-color: c.$bg_2;
+  position: absolute;
+  inset: 0 0 0 50%;
+  padding: 0.6rem;
+  display: grid;
+  grid-template-rows: 1fr 14fr;
+  gap: 1rem;
+
+  .controls {
+    width: fit-content;
+  }
+
+  .info {
+    padding: 0 4rem;
+
+    h1 {
+      margin-block: 0.67rem;
+      font-size: 2rem;
+      text-align: left;
+      text-transform: capitalize;
+      font-weight: 600;
+      color: c.$text_1;
+    }
+
+    .property-container {
+      width: 100%;
+      height: fit-content;
+      display: grid;
+      gap: 0.2rem;
+      align-items: center;
+      margin-bottom: 2.6rem;
+
+      .property {
+        display: grid;
+        grid-template-columns: 1fr 3.5fr;
+        gap: 0.4rem;
+
+        p {
+          padding: 0.6rem 0.4rem;
+          width: 100%;
+          border-radius: 0.4rem;
+          font-size: 0.9rem;
+          text-align: left;
+          cursor: pointer;
+        }
+
+        p.key {
+          color: c.$text_3;
+          text-transform: capitalize;
+
+          &:hover {
+            background-color: c.$bg_3;
+          }
+        }
+
+        p.value {
+          &:hover {
+            background-color: c.$bg_3;
+          }
+        }
+
+        p.empty-value {
+          font-style: oblique;
+          color: c.$bg_5;
+        }
+      }
+    }
+
+    .extras {
+      .comments {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+
+        input {
+          background: none;
+          border: 0;
+          border-bottom: thin solid c.$bg_4;
+          color: c.$text_3;
+          padding: 1rem 0;
+          outline: none;
+          font-size: 0.8rem;
+          text-align: left;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}

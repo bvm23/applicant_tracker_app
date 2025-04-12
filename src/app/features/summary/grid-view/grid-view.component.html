@@ -10,9 +10,9 @@
     }
   </article>
 </section>
-} @if (selectedUser()){
+} @if (focusedUser()){
 <at-card-menu
-  [user]="selectedUser()!"
+  [user]="focusedUser()!"
   [style]="{
     top: focused()?.y + 'px',
     left: focused()?.x + 'px'
