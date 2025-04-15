@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'at-popup-menu',
@@ -6,4 +6,6 @@ import { Component } from '@angular/core';
   templateUrl: './popup-menu.component.html',
   styleUrl: './popup-menu.component.scss',
 })
-export class PopupMenuComponent {}
+export class PopupMenuComponent {
+  backgroundColor = input<string>();
+}

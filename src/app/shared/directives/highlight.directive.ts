@@ -81,12 +81,25 @@ export class HighlightDirective {
             color = '';
         }
         break;
+      case 'skills':
+        switch (this.viewValue()) {
+          default:
+            color = this.colors.grey;
+        }
+        break;
       default:
         color = '';
     }
     this.el.nativeElement.style.backgroundColor = color;
     this.el.nativeElement.style.color = '#c9c5c5';
-    this.el.nativeElement.style.padding = '0 0.4rem';
+    this.el.nativeElement.style.padding = [
+      'stage',
+      'skills',
+      'role',
+      'location',
+    ].includes(this.viewFor())
+      ? '0 0.4rem'
+      : '0';
     this.el.nativeElement.style.borderRadius = '0.2rem';
     this.el.nativeElement.style.fontWeight =
       this.viewFor() === 'stage' ? '500' : '400';

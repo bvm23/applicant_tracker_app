@@ -12,19 +12,53 @@
     <div class="property-container">
       @for (entry of entries(); track $index) {
       <div class="property">
-        <p class="key" [title]="entry[0]">{{ entry[0] }}</p>
-        <p
-          [class]="{ value: true, 'empty-value': !entry[1] }"
-          [title]="entry[1]"
-        >
-          {{
-            entry[0] === "added"
-              ? (entry[1] | date : "medium")
-              : entry[1]
-              ? entry[1]
-              : "empty"
-          }}
-        </p>
+        <div class="key">
+          <p [title]="entry[0]">
+            {{ entry[0] === "hiringManager" ? "hiring manager" : entry[0] }}
+          </p>
+        </div>
+        <div class="value" (click)="toggleValueMenu(entry[0])">
+          @if(typeof entry[1]==='object' && entry[1].length>0){ @for (item of
+          entry[1]; track $index){
+          <p
+            [title]="entry[1][$index]"
+            [atHighlight]="entry[0]"
+            [viewValue]="entry[1]"
+            fontSize="14"
+          >
+            {{ entry[1][$index] }}
+          </p>
+          }}@else{
+          <p
+            [class]="{ 'empty-value': !entry[1] }"
+            [title]="entry[1]"
+            [atHighlight]="entry[0]"
+            [viewValue]="entry[1]"
+            fontSize="14"
+          >
+            {{
+              entry[0] === "added"
+                ? (entry[1] | date : "medium")
+                : entry[1]
+                ? openedMenu() === entry[0]
+                  ? entry[1] + "X"
+                  : entry[1]
+                : "empty"
+            }}
+          </p>
+          } @if (openedMenu()===entry[0]) {
+          <at-popup-menu class="value-menu" backgroundColor="#272727">
+            <div class="content">
+              <span>select an option or create one</span>
+              <div class="values">
+                @for (item of openedMenuValues(); track $index) {
+                <p class="value">{{ item }}</p>
+                }
+              </div>
+            </div>
+          </at-popup-menu>
+          }
+        </div>
       </div>
       }
     </div>
