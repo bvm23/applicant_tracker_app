@@ -12,35 +12,25 @@ import { TableViewComponent } from '../table-view/table-view.component';
 import { ApplicantService } from '../applicant.service';
 import { ApplicantInfoComponent } from '../applicant-info/applicant-info.component';
 import { Applicant } from '../applicant.model';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'at-summary-content',
-  imports: [GridViewComponent, TableViewComponent, ApplicantInfoComponent],
+  imports: [
+    GridViewComponent,
+    TableViewComponent,
+    ApplicantInfoComponent,
+    AsyncPipe,
+  ],
   templateUrl: './summary-content.component.html',
   styleUrl: './summary-content.component.scss',
 })
-export class SummaryContentComponent implements OnInit {
+export class SummaryContentComponent {
   private apService = inject(ApplicantService);
   private destoryRef = inject(DestroyRef);
 
+  selectedApplicant$ = this.apService.selectedApplicant$;
   applicants = this.apService.allApplicants;
 
   view = input.required<string>();
-  selectedApplicant = signal<Applicant | undefined>(undefined);
-
-  applicantIsSelected = computed(
-    () =>
-      this.selectedApplicant() &&
-      this.applicants().findIndex(
-        (ap) => ap.id === this.selectedApplicant()?.id
-      ) !== -1
-  );
-
-  ngOnInit(): void {
-    const subscription = this.apService.selectedApplicant$.subscribe({
-      next: (value) => this.selectedApplicant.set(value),
-    });
-
-    this.destoryRef.onDestroy(() => subscription.unsubscribe());
-  }
 }

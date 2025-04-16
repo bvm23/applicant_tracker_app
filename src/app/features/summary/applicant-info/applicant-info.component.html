@@ -13,7 +13,7 @@
       @for (entry of entries(); track $index) {
       <div class="property">
         <div class="key">
-          <p [title]="entry[0]">
+          <p [title]="entry[0]" class="key-data">
             {{ entry[0] === "hiringManager" ? "hiring manager" : entry[0] }}
           </p>
         </div>
@@ -25,17 +25,16 @@
             [atHighlight]="entry[0]"
             [viewValue]="entry[1]"
             fontSize="14"
+            class="value-data"
           >
-            {{ entry[1][$index] }}
+            {{
+              openedMenu() === entry[0]
+                ? entry[1][$index] + "X"
+                : entry[1][$index]
+            }}
           </p>
           }}@else{
-          <p
-            [class]="{ 'empty-value': !entry[1] }"
-            [title]="entry[1]"
-            [atHighlight]="entry[0]"
-            [viewValue]="entry[1]"
-            fontSize="14"
-          >
+          <p [class]="{ 'empty-value': !entry[1] }" [title]="entry[1]">
             {{
               entry[0] === "added"
                 ? (entry[1] | date : "medium")
@@ -46,19 +45,24 @@
                 : "empty"
             }}
           </p>
-          } @if (openedMenu()===entry[0]) {
-          <at-popup-menu class="value-menu" backgroundColor="#272727">
-            <div class="content">
-              <span>select an option or create one</span>
-              <div class="values">
-                @for (item of openedMenuValues(); track $index) {
-                <p class="value">{{ item }}</p>
-                }
-              </div>
-            </div>
-          </at-popup-menu>
           }
         </div>
+        @if (openedMenu()===entry[0]) {
+        <at-popup-menu class="value-menu" backgroundColor="#272727">
+          <div class="content">
+            <span>select an option or create one</span>
+            <div class="values">
+              @for (item of openedMenuValues(); track $index) {
+              <div class="value-holder" (click)="updateValue(entry[0], item)">
+                <p class="value">
+                  {{ item }}
+                </p>
+              </div>
+              }
+            </div>
+          </div>
+        </at-popup-menu>
+        }
       </div>
       }
     </div>

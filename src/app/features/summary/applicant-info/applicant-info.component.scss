@@ -2,7 +2,7 @@
 
 section {
   background-color: c.$bg_2;
-  position: absolute;
+  position: fixed;
   inset: 0 0 0 50%;
   padding: 0.6rem;
   display: grid;
@@ -35,23 +35,18 @@ section {
 
       .property {
         display: grid;
-        grid-template-columns: 1fr 3.5fr;
+        grid-template-columns: 1fr 3fr;
         gap: 0.4rem;
-
-        div.key p,
-        div.value p {
-          padding: 0.6rem 0.4rem;
-          width: 100%;
-          font-size: 0.9rem;
-          text-align: left;
-          cursor: pointer;
-        }
+        position: relative;
 
         div.key {
           color: c.$text_3;
           text-transform: capitalize;
-          border-radius: 0.4rem;
+          border-radius: 0 0.4rem;
           position: relative;
+          cursor: pointer;
+          padding: 0 0.4rem;
+
           &:hover {
             background-color: c.$bg_3;
           }
@@ -63,7 +58,7 @@ section {
           align-items: center;
           padding: 0 0.4rem;
           gap: 0.4rem;
-          position: relative;
+          cursor: pointer;
 
           p {
             width: fit-content;
@@ -72,34 +67,56 @@ section {
           &:hover {
             background-color: c.$bg_3;
           }
+        }
 
-          .value-menu {
-            position: absolute;
-            width: 100%;
-            left: 0;
-            top: 34px;
-            z-index: 24;
+        .value-menu {
+          display: grid;
+          grid-column: 2/4;
+          grid-row: 2/4;
+          position: absolute;
+          width: 100%;
+          z-index: 24;
 
-            .content {
-              padding: 0.6rem;
+          .content {
+            padding: 0.4rem;
 
-              span {
-                font-size: 0.8rem;
-              }
+            span {
+              font-size: 0.8rem;
+            }
 
-              .values {
-                // background-color: yellow;
-                display: flex;
-                flex-direction: column;
+            .values {
+              display: flex;
+              flex-direction: column;
+              gap: 0.2rem;
+              margin-top: 0.4rem;
+
+              .value-holder {
+                // background-color: red;
+                width: 100%;
+                padding: 0.2rem;
+                border-radius: 0.2rem;
+
+                &:hover {
+                  background-color: c.$bg_5;
+                }
+
                 p {
-                  all: unset;
+                  width: fit-content;
                 }
               }
             }
           }
         }
 
-        p.empty-value {
+        .key-data,
+        .value-data {
+          padding: 0.6rem 0rem;
+          width: 100%;
+          font-size: 0.9rem;
+          text-align: left;
+        }
+
+        .empty-value {
           font-style: oblique;
           color: c.$bg_5;
         }

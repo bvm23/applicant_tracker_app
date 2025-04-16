@@ -53,10 +53,9 @@ export class ApplicantService {
     }
   }
 
-  updateApplicant(userId: string, newData: Record<string, string>) {
+  updateApplicant(userId: string, newData: Record<string, string | string[]>) {
     const applicantsList = this.applicants();
     const user = applicantsList.find((usr) => usr.id === userId);
-
     if (user) {
       Object.assign(user, newData);
       this.applicants.set([...applicantsList]);
