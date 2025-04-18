@@ -16,7 +16,6 @@ import { HighlightDirective } from '../../../shared/directives/highlight.directi
 import { PopupMenuComponent } from '../../../shared/components/popup-menu/popup-menu.component';
 import { debounce } from '../../../shared/utils/utils';
 import { CircleX } from 'lucide-angular';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'at-applicant-info',
@@ -45,13 +44,13 @@ export class ApplicantInfoComponent {
   openedMenu = signal<string | undefined>('');
   openedMenuValues = signal<string[]>([]);
   applicant = signal<Applicant | undefined>(undefined);
-  defaultMenuValues: object[] = [];
+  comments = signal<{ value: string; addedTime: string }[]>([]);
+
   entries = computed(() =>
     Object.entries(this.applicant() as object).filter(
       (pair) => !['id', 'name'].includes(pair[0])
     )
   );
-  comments = signal<{ value: string; addedTime: string }[]>([]);
 
   ngOnInit(): void {
     const subscription = this.apService.selectedApplicant$.subscribe({
@@ -59,6 +58,10 @@ export class ApplicantInfoComponent {
     });
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
+
+  isEditingValue(key: string) {
+    return this.openedMenu() === key;
   }
 
   onClose() {

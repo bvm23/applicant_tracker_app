@@ -29,7 +29,7 @@
           class="value"
           (click)="toggleValueMenu($event, entry[0])"
           [style]="{
-            backgroundColor: openedMenu() === entry[0] ? '#404040' : ''
+            backgroundColor: isEditingValue(entry[0]) ? '#404040' : ''
           }"
         >
           @if(typeof entry[1]==='object' && entry[1].length>0){ @for (item of
@@ -43,7 +43,7 @@
             textTransform="capitalize"
           >
             {{ entry[1][$index] }}
-            @if (openedMenu()===entry[0]) {
+            @if (isEditingValue(entry[0])) {
             <span>
               <lucide-icon
                 [img]="closeBtnIcon2"
@@ -78,10 +78,10 @@
           </p>
           }
         </div>
-        @if (openedMenu()===entry[0]) {
+        @if (isEditingValue(entry[0])) {
         <at-popup-menu class="value-menu" backgroundColor="#272727">
           <div class="content">
-            @if(openedMenu()==='email' || openedMenu()==='website'){
+            @if(isEditingValue('email') || isEditingValue('website')){
             <div class="new-input-div">
               <input
                 type="text"
