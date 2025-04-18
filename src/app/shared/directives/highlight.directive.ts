@@ -20,6 +20,7 @@ export class HighlightDirective {
   viewFor = input<string>('', { alias: 'atHighlight' });
   viewValue = input<string>();
   fontSize = input<string>();
+  padding = input<string>();
   textTransform = input<string>();
 
   setHighlight() {
@@ -93,12 +94,9 @@ export class HighlightDirective {
     }
     this.el.nativeElement.style.backgroundColor = color;
     this.el.nativeElement.style.color = '#c9c5c5';
-    this.el.nativeElement.style.padding = [
-      'stage',
-      'skills',
-      'role',
-      'location',
-    ].includes(this.viewFor())
+    this.el.nativeElement.style.padding = this.padding()
+      ? this.padding()!
+      : ['stage', 'skills', 'role', 'location'].includes(this.viewFor())
       ? '0 0.4rem'
       : '0';
     this.el.nativeElement.style.borderRadius = '0.2rem';

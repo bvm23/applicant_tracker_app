@@ -1,1 +1,58 @@
-<p>table-view works!</p>
+<section>
+  <table>
+    <tr>
+      @for (key of keys; track $index) {
+      <th
+        class="key"
+        [style]="{
+          display: key === 'id' ? 'none' : '',
+          textTransform: 'capitalize',
+          fontSize: '0.8rem'
+        }"
+      >
+        {{ key }}
+      </th>
+      }
+    </tr>
+    @for (ap of applicants(); track $index) {
+    <tr>
+      @for (val of ap; track $index) {
+      <td
+        [style]="{
+        display: val[0] === 'id' ? 'none' : '',
+        }"
+      >
+        @if(typeof val[1]==='object' && val[1].length>0){ @for (item of val[1];
+        track $index){
+        <p
+          class="value"
+          [atHighlight]="val[0]"
+          [viewValue]="val[1]"
+          fontSize="0.8rem"
+          padding="0.2rem"
+          [textTransform]="
+            !['email', 'website'].includes(val[0]) ? 'capitalize' : ''
+          "
+        >
+          {{ val[1][$index] }}
+        </p>
+        }} @else{
+        <p
+          class="value"
+          [atHighlight]="val[0]"
+          [viewValue]="val[1]"
+          fontSize="0.8rem"
+          padding="0.2rem"
+          [textTransform]="
+            !['email', 'website'].includes(val[0]) ? 'capitalize' : ''
+          "
+        >
+          {{ val[1] }}
+        </p>
+        }
+      </td>
+      }
+    </tr>
+    }
+  </table>
+</section>

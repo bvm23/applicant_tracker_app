@@ -1,0 +1,37 @@
+@use "../../../../sass/colors" as c;
+
+section {
+  table {
+    border-top: 1px solid c.$bg_4;
+    border-bottom: 1px solid c.$bg_4;
+    border-collapse: collapse;
+    width: 150%;
+
+    th,
+    td {
+      border: 1px solid c.$bg_4;
+      border-left: 0;
+      text-align: left;
+      padding: 0.4rem;
+    }
+
+    p {
+      width: fit-content;
+      display: inline;
+      margin-right: 0.2rem;
+    }
+
+    th {
+      color: c.$text_3;
+    }
+
+    td {
+      color: c.$text_1;
+    }
+
+    th:last-child,
+    td:last-child {
+      border-right: 0;
+    }
+  }
+}
