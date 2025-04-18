@@ -47,6 +47,10 @@ export class ApplicantService {
   }
 
   selectApplicant(userId: string) {
+    if (userId === this.selectedApplicant$.value?.id) {
+      this.removeSelectedApplicant();
+      return;
+    }
     const applicant = this.applicants().find((ap) => ap.id === userId);
     if (applicant) {
       this.selectedApplicant$.next(applicant);

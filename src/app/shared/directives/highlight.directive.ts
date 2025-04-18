@@ -20,6 +20,7 @@ export class HighlightDirective {
   viewFor = input<string>('', { alias: 'atHighlight' });
   viewValue = input<string>();
   fontSize = input<string>();
+  textTransform = input<string>();
 
   setHighlight() {
     let color = '';
@@ -108,6 +109,7 @@ export class HighlightDirective {
       : this.viewFor() === 'stage'
       ? '1rem'
       : '0.8rem';
+    this.el.nativeElement.style.textTransform = this.textTransform() || 'none';
   }
 
   ngOnInit() {

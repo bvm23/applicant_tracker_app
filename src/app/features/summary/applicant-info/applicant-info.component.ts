@@ -1,4 +1,12 @@
-import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { Applicant } from '../applicant.model';
 import { ChevronsRight, LucideAngularModule } from 'lucide-angular';
 import { ActionButtonComponent } from '../../../shared/components/action-button/action-button.component';
@@ -6,6 +14,9 @@ import { ApplicantService } from '../applicant.service';
 import { DatePipe } from '@angular/common';
 import { HighlightDirective } from '../../../shared/directives/highlight.directive';
 import { PopupMenuComponent } from '../../../shared/components/popup-menu/popup-menu.component';
+import { debounce } from '../../../shared/utils/utils';
+import { CircleX } from 'lucide-angular';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'at-applicant-info',
@@ -15,6 +26,7 @@ import { PopupMenuComponent } from '../../../shared/components/popup-menu/popup-
     DatePipe,
     HighlightDirective,
     PopupMenuComponent,
+    LucideAngularModule,
   ],
   templateUrl: './applicant-info.component.html',
   styleUrl: './applicant-info.component.scss',
@@ -22,8 +34,13 @@ import { PopupMenuComponent } from '../../../shared/components/popup-menu/popup-
 export class ApplicantInfoComponent {
   private apService = inject(ApplicantService);
   private destroyRef = inject(DestroyRef);
+  newInfoInputComponent =
+    viewChild<ElementRef<HTMLInputElement>>('newInfoInput');
+  newCommentInputComponent =
+    viewChild<ElementRef<HTMLInputElement>>('newCommentInput');
 
   closeBtnIcon = ChevronsRight;
+  closeBtnIcon2 = CircleX;
 
   openedMenu = signal<string | undefined>('');
   openedMenuValues = signal<string[]>([]);
@@ -34,6 +51,7 @@ export class ApplicantInfoComponent {
       (pair) => !['id', 'name'].includes(pair[0])
     )
   );
+  comments = signal<{ value: string; addedTime: string }[]>([]);
 
   ngOnInit(): void {
     const subscription = this.apService.selectedApplicant$.subscribe({
@@ -47,10 +65,21 @@ export class ApplicantInfoComponent {
     this.apService.removeSelectedApplicant();
   }
 
-  toggleValueMenu(key: string) {
-    if (['added', 'attachments', 'website', 'email'].includes(key)) return;
+  toggleValueMenu(e: Event, key: string) {
+    let requiredTarget = e.target as HTMLDivElement;
+    if (requiredTarget.tagName !== 'DIV') {
+      return;
+    }
 
+    if (['added', 'attachments'].includes(key)) return;
     this.openedMenu.set(this.openedMenu() === key ? undefined : key);
+
+    if (key === 'email' || key === 'website') {
+      setTimeout(() => {
+        this.newInfoInputComponent()?.nativeElement.focus();
+      });
+      return;
+    }
 
     let allValues: string[] = [];
     this.apService
@@ -69,21 +98,44 @@ export class ApplicantInfoComponent {
   }
 
   updateValue(selectedKey: string, newValue: string) {
-    let modifiedValue: string | string[];
-    if (selectedKey === 'skills') {
-      modifiedValue = Array.from(
-        new Set([...this.applicant()!.skills, newValue])
-      );
-    } else {
-      modifiedValue = newValue;
-    }
+    let modifiedValue: string | string[] =
+      selectedKey === 'skills'
+        ? Array.from(new Set([...this.applicant()!.skills, newValue]))
+        : newValue;
+
     let newData = { [selectedKey]: modifiedValue };
 
     this.apService.updateApplicant(this.applicant()!.id, newData);
     this.applicant.update((previousData) =>
       Object.assign({}, previousData, newData)
     );
-    this.openedMenu.set(undefined);
-    this.openedMenuValues.set([]);
+    if (!['email', 'website', 'skills'].includes(selectedKey)) {
+      this.openedMenu.set(undefined);
+      this.openedMenuValues.set([]);
+    }
+  }
+
+  removeValue(e: Event, selectedKey: string, value: string) {
+    let modifiedValue: string[] =
+      this.applicant()?.skills.filter((val) => val !== value) || [];
+
+    let newData = { [selectedKey]: modifiedValue };
+
+    this.apService.updateApplicant(this.applicant()!.id, newData);
+    this.applicant.update((previousData) =>
+      Object.assign({}, previousData, newData)
+    );
+  }
+
+  debouncedUpdateValue = debounce(this.updateValue.bind(this), 500);
+
+  addComment() {
+    let comment = this.newCommentInputComponent()?.nativeElement.value!;
+    let addedTime = new Date().toLocaleString();
+    this.comments.update((previousComments) => [
+      ...previousComments,
+      { value: comment, addedTime },
+    ]);
+    this.newCommentInputComponent()!.nativeElement.value = '';
   }
 }

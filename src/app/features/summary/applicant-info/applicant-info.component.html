@@ -8,7 +8,15 @@
     />
   </article>
   <article class="info">
-    <h1>{{ applicant()?.name }}</h1>
+    <input
+      type="text"
+      name="newInputValue"
+      id="newInputValue"
+      class="name"
+      [value]="applicant()?.name"
+      (keyup)="debouncedUpdateValue('name', newInfoInput.value)"
+      #newInfoInput
+    />
     <div class="property-container">
       @for (entry of entries(); track $index) {
       <div class="property">
@@ -17,32 +25,55 @@
             {{ entry[0] === "hiringManager" ? "hiring manager" : entry[0] }}
           </p>
         </div>
-        <div class="value" (click)="toggleValueMenu(entry[0])">
+        <div
+          class="value"
+          (click)="toggleValueMenu($event, entry[0])"
+          [style]="{
+            backgroundColor: openedMenu() === entry[0] ? '#404040' : ''
+          }"
+        >
           @if(typeof entry[1]==='object' && entry[1].length>0){ @for (item of
           entry[1]; track $index){
           <p
             [title]="entry[1][$index]"
             [atHighlight]="entry[0]"
             [viewValue]="entry[1]"
-            fontSize="14"
+            fontSize="1rem"
             class="value-data"
+            textTransform="capitalize"
           >
-            {{
-              openedMenu() === entry[0]
-                ? entry[1][$index] + "X"
-                : entry[1][$index]
-            }}
+            {{ entry[1][$index] }}
+            @if (openedMenu()===entry[0]) {
+            <span>
+              <lucide-icon
+                [img]="closeBtnIcon2"
+                size="13"
+                class="icon"
+                title="remove"
+                (click)="removeValue($event, entry[0], entry[1][$index])"
+              ></lucide-icon>
+            </span>
+            }
           </p>
           }}@else{
-          <p [class]="{ 'empty-value': !entry[1] }" [title]="entry[1]">
+          <p
+            [class]="{
+              'value-data': true,
+              'empty-value': !entry[1] || entry[1].length === 0
+            }"
+            [title]="entry[1]"
+            fontSize="1rem"
+            [textTransform]="
+              !['email', 'website'].includes(entry[0]) ? 'capitalize' : ''
+            "
+            atHighlight
+          >
             {{
               entry[0] === "added"
                 ? (entry[1] | date : "medium")
+                : !entry[1] || entry[1].length === 0
+                ? "empty"
                 : entry[1]
-                ? openedMenu() === entry[0]
-                  ? entry[1] + "X"
-                  : entry[1]
-                : "empty"
             }}
           </p>
           }
@@ -50,6 +81,18 @@
         @if (openedMenu()===entry[0]) {
         <at-popup-menu class="value-menu" backgroundColor="#272727">
           <div class="content">
+            @if(openedMenu()==='email' || openedMenu()==='website'){
+            <div class="new-input-div">
+              <input
+                type="text"
+                name="newInputValue"
+                id="newInputValue"
+                [value]="entry[1]"
+                (keyup)="debouncedUpdateValue(entry[0], newInfoInput.value)"
+                #newInfoInput
+              />
+            </div>
+            }@else {
             <span>select an option or create one</span>
             <div class="values">
               @for (item of openedMenuValues(); track $index) {
@@ -60,6 +103,7 @@
               </div>
               }
             </div>
+            }
           </div>
         </at-popup-menu>
         }
@@ -74,8 +118,16 @@
           name="comment"
           id="comment"
           placeholder="Add a comment..."
+          (change)="addComment()"
+          #newCommentInput
         />
-        <div class="comments-container"></div>
+        <ul class="comments-container">
+          @for (comment of comments(); track $index) {
+          <div>
+            <li>{{ comment.value }}</li>
+          </div>
+          }
+        </ul>
       </div>
     </article>
   </article>
