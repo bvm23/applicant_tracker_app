@@ -1,11 +1,13 @@
 @use "../../../../sass/colors" as c;
 
 section {
+  width: 120%;
+
   table {
     border-top: 1px solid c.$bg_4;
     border-bottom: 1px solid c.$bg_4;
     border-collapse: collapse;
-    width: 120%;
+    width: 100%;
 
     th {
       color: c.$text_3;
@@ -15,6 +17,18 @@ section {
 
       &:hover {
         background-color: c.$bg_3;
+      }
+    }
+
+    .key {
+      font-size: 0.8rem;
+      text-transform: capitalize;
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+
+      .icon {
+        display: flex;
       }
     }
 
@@ -44,6 +58,33 @@ section {
       width: fit-content;
       display: inline;
       margin-right: 0.2rem;
+
+      .image {
+        display: flex;
+        place-content: center;
+        border-radius: 1rem;
+        overflow: hidden;
+        margin-right: 0.4rem;
+        img {
+          height: 1.8cap;
+          aspect-ratio: 1;
+        }
+      }
+    }
+
+    p.image-text {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    p.underline {
+      text-decoration: underline;
+
+      a {
+        text-decoration: none;
+        color: #c9c5c5;
+      }
     }
 
     th:last-child,

@@ -1,13 +1,13 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { ApplicantService } from '../applicant.service';
-import { Applicant } from '../applicant.model';
 import { HighlightDirective } from '../../../shared/directives/highlight.directive';
 import { FilterService } from '../../../shared/services/filter.service';
 import { DatePipe } from '@angular/common';
+import { ArrowDown, ArrowUp, LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'at-table-view',
-  imports: [HighlightDirective, DatePipe],
+  imports: [HighlightDirective, DatePipe, LucideAngularModule],
   templateUrl: './table-view.component.html',
   styleUrl: './table-view.component.scss',
 })
@@ -15,19 +15,13 @@ export class TableViewComponent {
   private apService = inject(ApplicantService);
   private filterService = inject(FilterService);
 
-  view = input.required<string>();
-  selectedValue = signal<{ key: string; userId: string } | undefined>(
-    undefined
-  );
-  sortConfig = this.filterService.sortCriteria;
-
   keys = [
     'id',
     'name',
     'role',
     'stage',
     'email',
-    'hiring manager',
+    'hiringManager',
     'attachments',
     'website',
     'skills',
@@ -36,6 +30,14 @@ export class TableViewComponent {
     'source',
     'added',
   ];
+  downArrowIcon = ArrowDown;
+  upArrowIcon = ArrowUp;
+
+  view = input.required<string>();
+  selectedValue = signal<{ key: string; userId: string } | undefined>(
+    undefined
+  );
+  sortConfig = this.filterService.sortCriteria;
 
   applicants = computed(() => {
     const sortedList =
@@ -51,6 +53,17 @@ export class TableViewComponent {
   });
 
   selectValue(key: string, userId: string) {
-    this.selectedValue.set({ key, userId });
+    const isSelected =
+      JSON.stringify(this.selectedValue()) === JSON.stringify({ key, userId });
+    isSelected
+      ? this.selectedValue.set(undefined)
+      : this.selectedValue.set({ key, userId });
+  }
+
+  onSelectKey(key: string) {
+    this.filterService.addSortCriteria({
+      key: key,
+      order: this.sortConfig().order === 'desc' ? 'asc' : 'desc',
+    });
   }
 }

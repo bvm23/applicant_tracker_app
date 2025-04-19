@@ -145,6 +145,4 @@ export const Stages = [
   { name: 'Hired', value: 'hired' },
 ];
 
-export const Keys = Object.keys(Data[1])
-  .filter((valKey) => valKey !== 'id')
-  .map((valKey) => (valKey === 'hiringManager' ? 'hiring manager' : valKey));
+export const Keys = Object.keys(Data[1]).filter((valKey) => valKey !== 'id');

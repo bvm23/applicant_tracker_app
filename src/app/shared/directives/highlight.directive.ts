@@ -89,6 +89,18 @@ export class HighlightDirective {
             color = this.colors.grey;
         }
         break;
+      case 'employment':
+        switch (this.viewValue()) {
+          default:
+            color = this.colors.grey;
+        }
+        break;
+      case 'source':
+        switch (this.viewValue()) {
+          default:
+            color = this.colors.grey;
+        }
+        break;
       default:
         color = '';
     }
