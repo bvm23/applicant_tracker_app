@@ -5,28 +5,45 @@ section {
     border-top: 1px solid c.$bg_4;
     border-bottom: 1px solid c.$bg_4;
     border-collapse: collapse;
-    width: 150%;
+    width: 120%;
 
-    th,
-    td {
+    th {
+      color: c.$text_3;
       border: 1px solid c.$bg_4;
-      border-left: 0;
       text-align: left;
       padding: 0.4rem;
+
+      &:hover {
+        background-color: c.$bg_3;
+      }
+    }
+
+    td {
+      color: c.$text_1;
+      border: 1px solid c.$bg_4;
+      text-align: left;
+      padding: 0.4rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: c.$bg_3;
+      }
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      border-left: 0;
+    }
+
+    .highlight {
+      background-color: #001b2c;
+      border: 2px solid c.$blue;
     }
 
     p {
       width: fit-content;
       display: inline;
       margin-right: 0.2rem;
-    }
-
-    th {
-      color: c.$text_3;
-    }
-
-    td {
-      color: c.$text_1;
     }
 
     th:last-child,

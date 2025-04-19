@@ -18,9 +18,14 @@
     <tr>
       @for (val of ap; track $index) {
       <td
+        [class.highlight]="
+          this.selectedValue()?.key === val[0] &&
+          this.selectedValue()?.userId === ap[0][1]
+        "
         [style]="{
         display: val[0] === 'id' ? 'none' : '',
         }"
+        (click)="selectValue(val[0], ap[0][1])"
       >
         @if(typeof val[1]==='object' && val[1].length>0){ @for (item of val[1];
         track $index){

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { ApplicantService } from '../applicant.service';
 import { Applicant } from '../applicant.model';
 import { HighlightDirective } from '../../../shared/directives/highlight.directive';
@@ -13,6 +13,9 @@ export class TableViewComponent {
   private apService = inject(ApplicantService);
 
   view = input.required<string>();
+  selectedValue = signal<{ key: string; userId: string } | undefined>(
+    undefined
+  );
 
   keys = [
     'id',
@@ -38,4 +41,8 @@ export class TableViewComponent {
       )
       .map((ap) => Object.entries(ap))
   );
+
+  selectValue(key: string, userId: string) {
+    this.selectedValue.set({ key, userId });
+  }
 }
