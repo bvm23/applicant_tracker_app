@@ -1,92 +1,90 @@
-<section>
-  <table>
-    <tr>
-      @for (key of keys; track $index) {
-      <th
-        [style]="{ display: key === 'id' ? 'none' : '' }"
-        [title]="key"
-        (click)="onSelectKey(key)"
-      >
-        <p class="key">
-          {{ key === "hiringManager" ? "hiring manager" : key }}
-          @if (this.sortConfig().key===key ) {
-          <lucide-icon
-            class="icon"
-            [img]="
-              this.sortConfig().order === 'asc' ? upArrowIcon : downArrowIcon
-            "
-            [title]="
-              this.sortConfig().order === 'asc' ? 'ascending' : 'descending'
-            "
-            size="14"
-          ></lucide-icon>
-          }
-        </p>
-      </th>
-      }
-    </tr>
-    @for (ap of applicants(); track $index) {
-    <tr>
-      @for (val of ap; track $index) {
-      <td
-        [class.highlight]="
-          this.selectedValue()?.key === val[0] &&
-          this.selectedValue()?.userId === ap[0][1]
-        "
-        [style]="{
+<table>
+  <tr>
+    @for (key of keys; track $index) {
+    <th
+      [style]="{ display: key === 'id' ? 'none' : '' }"
+      [title]="key"
+      (click)="onSelectKey(key)"
+    >
+      <p class="key">
+        {{ key === "hiringManager" ? "hiring manager" : key }}
+        @if (this.sortConfig().key===key ) {
+        <lucide-icon
+          class="icon"
+          [img]="
+            this.sortConfig().order === 'asc' ? upArrowIcon : downArrowIcon
+          "
+          [title]="
+            this.sortConfig().order === 'asc' ? 'ascending' : 'descending'
+          "
+          size="14"
+        ></lucide-icon>
+        }
+      </p>
+    </th>
+    }
+  </tr>
+  @for (ap of applicants(); track $index) {
+  <tr>
+    @for (val of ap; track $index) {
+    <td
+      [class.highlight]="
+        this.selectedValue()?.key === val[0] &&
+        this.selectedValue()?.userId === ap[0][1]
+      "
+      [style]="{
         display: val[0] === 'id' ? 'none' : '',
         }"
-        (click)="selectValue(val[0], ap[0][1])"
+      (click)="selectValue(val[0], ap[0][1])"
+    >
+      @if(typeof val[1]==='object' && val[1].length>0){ @for (item of val[1];
+      track $index){
+      <p
+        class="value"
+        [title]="val[1][$index]"
+        [atHighlight]="val[0]"
+        [viewValue]="val[1]"
+        fontSize="0.8rem"
+        padding="0.2rem"
+        [textTransform]="
+          !['email', 'website'].includes(val[0]) ? 'capitalize' : ''
+        "
       >
-        @if(typeof val[1]==='object' && val[1].length>0){ @for (item of val[1];
-        track $index){
-        <p
-          class="value"
-          [title]="val[1][$index]"
-          [atHighlight]="val[0]"
-          [viewValue]="val[1]"
-          fontSize="0.8rem"
-          padding="0.2rem"
-          [textTransform]="
-            !['email', 'website'].includes(val[0]) ? 'capitalize' : ''
-          "
-        >
-          {{ val[1][$index] }}
-        </p>
-        }} @else{
-        <p
-          [class]="{
-            value: true,
-            'image-text': val[0] === 'hiringManager',
-            underline: ['website', 'email'].includes(val[0])
-          }"
-          [title]="val[1]"
-          [atHighlight]="val[0]"
-          [viewValue]="val[1]"
-          fontSize="0.8rem"
-          padding="0.2rem"
-          [textTransform]="
-            !['email', 'website'].includes(val[0]) ? 'capitalize' : ''
-          "
-        >
-          @if (val[0]==='hiringManager') {
-          <span class="image">
-            <img
-              src="https://img.freepik.com/free-vector/young-man-with-glasses-avatar_1308-175763.jpg?t=st=1743091432~exp=1743095032~hmac=4a676fe111e4770b1216e16a773fba963138f93c7fa694d38ebed4c318053881&w=740"
-              alt="avatar"
-            />
-          </span>
-          {{ val[1] }}
-          }@else if (val[0]==='website') {
-          <a [href]="val[1]" target="_blank">{{ val[1] }}</a>
-          } @else {
-          {{ val[0] === "added" ? (val[1] | date : "medium") : val[1] }}
-          }
-        </p>
+        {{ val[1][$index] }}
+      </p>
+      }} @else{
+      <p
+        [class]="{
+          value: true,
+          'image-text': val[0] === 'hiringManager',
+          underline: ['website', 'email'].includes(val[0])
+        }"
+        [title]="val[1]"
+        [atHighlight]="val[0]"
+        [viewValue]="val[1]"
+        fontSize="0.8rem"
+        padding="0.2rem"
+        [textTransform]="
+          !['email', 'website'].includes(val[0]) ? 'capitalize' : ''
+        "
+      >
+        @if (val[0]==='hiringManager') {
+        <span class="image">
+          <img
+            src="https://img.icons8.com/?size=100&id=kDoeg22e5jUY&format=png&color=000000"
+            alt="avatar"
+          />
+        </span>
+        {{ val[1] }}
+        }@else if (val[0]==='website') {
+        <a [href]="val[1]" target="_blank">{{ val[1] }}</a>
+        } @else {
+        {{ val[0] === "added" ? (val[1] | date : "medium") : val[1] }}
         }
-      </td>
+      </p>
       }
-    </tr>
+    </td>
     }
-  </table>
-</section>
+  </tr>
+  }
+</table>

@@ -15,19 +15,25 @@
 <div class="manager-div bg" title="Hiring Manager">
   <div class="image">
     <img
-      src="https://img.freepik.com/free-vector/young-man-with-glasses-avatar_1308-175763.jpg?t=st=1743091432~exp=1743095032~hmac=4a676fe111e4770b1216e16a773fba963138f93c7fa694d38ebed4c318053881&w=740"
+      src="https://img.icons8.com/?size=100&id=kDoeg22e5jUY&format=png&color=000000"
       alt="avatar"
     />
   </div>
   <span>{{ user().hiringManager }}</span>
 </div>
 <div class="bg" title="Location">
-  <p atHighlight="location" [viewValue]="user().location">
+  <p
+    atHighlight="location"
+    [viewValue]="user().location"
+    textTransform="capitalize"
+  >
     {{ user().location }}
   </p>
 </div>
 <div class="bg" title="Role">
-  <p atHighlight="role" [viewValue]="user().role">{{ user().role }}</p>
+  <p atHighlight="role" [viewValue]="user().role" textTransform="capitalize">
+    {{ user().role }}
+  </p>
 </div>
 <div class="skills bg" title="Skills">
   @for (skill of user().skills; track $index) {

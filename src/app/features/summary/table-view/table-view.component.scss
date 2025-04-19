@@ -1,95 +1,93 @@
 @use "../../../../sass/colors" as c;
 
-section {
-  width: 120%;
+table {
+  border-top: 1px solid c.$bg_4;
+  border-bottom: 1px solid c.$bg_4;
+  border-collapse: collapse;
+  min-width: max-content;
+  width: 100%;
 
-  table {
-    border-top: 1px solid c.$bg_4;
-    border-bottom: 1px solid c.$bg_4;
-    border-collapse: collapse;
-    width: 100%;
+  th {
+    color: c.$text_3;
+    border: 1px solid c.$bg_4;
+    text-align: left;
+    padding: 0.3rem;
 
-    th {
-      color: c.$text_3;
-      border: 1px solid c.$bg_4;
-      text-align: left;
-      padding: 0.4rem;
-
-      &:hover {
-        background-color: c.$bg_3;
-      }
+    &:hover {
+      background-color: c.$bg_3;
     }
+  }
 
-    .key {
-      font-size: 0.8rem;
-      text-transform: capitalize;
+  .key {
+    font-size: 0.8rem;
+    text-transform: capitalize;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+
+    .icon {
       display: flex;
-      align-items: center;
-      gap: 0.2rem;
-
-      .icon {
-        display: flex;
-      }
     }
+  }
 
-    td {
-      color: c.$text_1;
-      border: 1px solid c.$bg_4;
-      text-align: left;
-      padding: 0.4rem;
-      cursor: pointer;
+  td {
+    color: c.$text_1;
+    border: 1px solid c.$bg_4;
+    text-align: left;
+    padding: 0.3rem;
+    cursor: pointer;
+    min-width: fit-content;
+    max-width: 12rem;
 
-      &:hover {
-        background-color: c.$bg_3;
-      }
+    &:hover {
+      background-color: c.$bg_3;
     }
+  }
 
-    th:nth-child(2),
-    td:nth-child(2) {
-      border-left: 0;
-    }
+  th:nth-child(2),
+  td:nth-child(2) {
+    border-left: 0;
+  }
 
-    .highlight {
-      background-color: #001b2c;
-      border: 2px solid c.$blue;
-    }
+  .highlight {
+    background-color: #001b2c;
+    border: 2px solid c.$blue;
+  }
 
-    p {
-      width: fit-content;
-      display: inline;
-      margin-right: 0.2rem;
+  p {
+    display: inline-flex;
+    margin: 0.1rem;
 
-      .image {
-        display: flex;
-        place-content: center;
-        border-radius: 1rem;
-        overflow: hidden;
-        margin-right: 0.4rem;
-        img {
-          height: 1.8cap;
-          aspect-ratio: 1;
-        }
-      }
-    }
-
-    p.image-text {
+    .image {
       display: flex;
-      flex-direction: row;
-      align-items: center;
-    }
-
-    p.underline {
-      text-decoration: underline;
-
-      a {
-        text-decoration: none;
-        color: #c9c5c5;
+      place-content: center;
+      border-radius: 1rem;
+      overflow: hidden;
+      margin-right: 0.4rem;
+      img {
+        height: 1.8cap;
+        aspect-ratio: 1;
       }
     }
+  }
 
-    th:last-child,
-    td:last-child {
-      border-right: 0;
+  p.image-text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  p.underline {
+    text-decoration: underline;
+
+    a {
+      text-decoration: none;
+      color: #c9c5c5;
     }
+  }
+
+  th:last-child,
+  td:last-child {
+    border-right: 0;
   }
 }
