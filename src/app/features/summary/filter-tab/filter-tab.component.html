@@ -1,7 +1,11 @@
 <section class="filter-container">
   <at-action-button
     [icon]="this.sortCriteria().order === 'asc' ? upArrowIcon : downArrowIcon"
-    [name]="this.sortCriteria().key"
+    [name]="
+      this.sortCriteria().key === 'hiringManager'
+        ? 'hiring manager'
+        : this.sortCriteria().key
+    "
     color="#22648d"
     class="selected-option"
     (click)="toggleSelectingOption()"
@@ -10,7 +14,7 @@
   <at-popup-menu class="option-detail">
     <div class="controls">
       <select name="key" id="key" (change)="onSelectOption($event, 'key')">
-        @for (key of keys; track $index) {
+        @for (key of keys(); track $index) {
         <option [value]="key" [selected]="key === this.sortCriteria().key">
           {{
             key === "hiringManager"

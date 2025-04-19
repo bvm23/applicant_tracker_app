@@ -1,4 +1,11 @@
-import { Component, inject, output, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import {
   ArrowDown,
   ArrowUp,
@@ -18,15 +25,24 @@ import { FilterService } from '../../../shared/services/filter.service';
 })
 export class FilterTabComponent {
   private filterService = inject(FilterService);
-  isSelectingOption = signal<boolean>(false);
-  deleteSort = output();
-  sortCriteria = this.filterService.sortCriteria;
 
   downArrowIcon = ArrowDown;
   upArrowIcon = ArrowUp;
   deleteIcon = Trash2;
-  keys = Keys.filter(
-    (valKey) => !['stage', 'website', 'employment', 'source'].includes(valKey)
+
+  sortCriteria = this.filterService.sortCriteria;
+
+  view = input.required();
+  isSelectingOption = signal<boolean>(false);
+  deleteSort = output();
+
+  keys = computed(() =>
+    this.view() === 'STAGE'
+      ? Keys.filter(
+          (valKey) =>
+            !['stage', 'website', 'employment', 'source'].includes(valKey)
+        )
+      : Keys
   );
 
   toggleSelectingOption() {
@@ -35,7 +51,12 @@ export class FilterTabComponent {
 
   onSelectOption(e: Event, target: 'key' | 'order') {
     const selectedValue = (e.target as HTMLSelectElement).value;
-    const newKey = target === 'key' ? selectedValue : this.sortCriteria().key!;
+    const newKey =
+      target === 'key'
+        ? selectedValue === 'hiring manager'
+          ? 'hiringManager'
+          : selectedValue
+        : this.sortCriteria().key!;
     const newOrder =
       target === 'order' ? selectedValue : this.sortCriteria().order;
 

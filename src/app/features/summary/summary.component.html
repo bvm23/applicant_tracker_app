@@ -49,6 +49,9 @@
   </article>
 </section>
 @if (sortIsActive) {
-<at-filter-tab (deleteSort)="clearSort()"></at-filter-tab>
+<at-filter-tab
+  [view]="selectedView()"
+  (deleteSort)="clearSort()"
+></at-filter-tab>
 }
 <at-summary-content [view]="selectedView()"></at-summary-content>

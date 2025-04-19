@@ -52,7 +52,7 @@
             !['email', 'website'].includes(val[0]) ? 'capitalize' : ''
           "
         >
-          {{ val[1] }}
+          {{ val[0] === "added" ? (val[1] | date : "medium") : val[1] }}
         </p>
         }
       </td>
