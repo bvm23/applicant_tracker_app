@@ -33,6 +33,8 @@ import { CircleX } from 'lucide-angular';
 export class ApplicantInfoComponent {
   private apService = inject(ApplicantService);
   private destroyRef = inject(DestroyRef);
+  newNameInputComponent =
+    viewChild<ElementRef<HTMLInputElement>>('newNameInput');
   newInfoInputComponent =
     viewChild<ElementRef<HTMLInputElement>>('newInfoInput');
   newCommentInputComponent =
@@ -56,6 +58,8 @@ export class ApplicantInfoComponent {
     const subscription = this.apService.selectedApplicant$.subscribe({
       next: (value) => this.applicant.set(value),
     });
+
+    this.newNameInputComponent()?.nativeElement.focus();
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }

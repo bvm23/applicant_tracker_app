@@ -14,8 +14,8 @@
       id="newInputValue"
       class="name"
       [value]="applicant()?.name"
-      (keyup)="debouncedUpdateValue('name', newInfoInput.value)"
-      #newInfoInput
+      (keyup)="debouncedUpdateValue('name', newNameInput.value)"
+      #newNameInput
     />
     <div class="property-container">
       @for (entry of entries(); track $index) {
