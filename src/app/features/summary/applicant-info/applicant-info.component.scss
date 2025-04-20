@@ -95,6 +95,18 @@ section {
                 }
               }
             }
+
+            .image {
+              display: flex;
+              place-content: center;
+              border-radius: 1rem;
+              overflow: hidden;
+              margin-right: 0.4rem;
+              img {
+                height: 1.8cap;
+                aspect-ratio: 1;
+              }
+            }
           }
 
           &:hover {
