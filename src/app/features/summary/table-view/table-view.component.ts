@@ -1,13 +1,37 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { ApplicantService } from '../applicant.service';
 import { HighlightDirective } from '../../../shared/directives/highlight.directive';
 import { FilterService } from '../../../shared/services/filter.service';
 import { DatePipe } from '@angular/common';
-import { ArrowDown, ArrowUp, LucideAngularModule } from 'lucide-angular';
+import {
+  ArrowDown,
+  ArrowUp,
+  Check,
+  XCircle,
+  LucideAngularModule,
+} from 'lucide-angular';
+import { Applicant } from '../applicant.model';
+import { PopupMenuComponent } from '../../../shared/components/popup-menu/popup-menu.component';
+import { FormsModule } from '@angular/forms';
+import { ActionButtonComponent } from '../../../shared/components/action-button/action-button.component';
 
 @Component({
   selector: 'at-table-view',
-  imports: [HighlightDirective, DatePipe, LucideAngularModule],
+  imports: [
+    HighlightDirective,
+    DatePipe,
+    LucideAngularModule,
+    PopupMenuComponent,
+    FormsModule,
+    ActionButtonComponent,
+  ],
   templateUrl: './table-view.component.html',
   styleUrl: './table-view.component.scss',
 })
@@ -32,12 +56,15 @@ export class TableViewComponent {
   ];
   downArrowIcon = ArrowDown;
   upArrowIcon = ArrowUp;
+  submitIcon = Check;
+  removeIcon = XCircle;
 
-  view = input.required<string>();
-  selectedValue = signal<{ key: string; userId: string } | undefined>(
-    undefined
-  );
   sortConfig = this.filterService.sortCriteria;
+  view = input.required<string>();
+  selectedValue = signal<
+    { key: string; value: string; userId: string } | undefined
+  >(undefined);
+  newValueInput = signal<string>('');
 
   applicants = computed(() => {
     const sortedList =
@@ -52,12 +79,33 @@ export class TableViewComponent {
       .map((ap) => Object.entries(ap));
   });
 
-  selectValue(key: string, userId: string) {
-    const isSelected =
-      JSON.stringify(this.selectedValue()) === JSON.stringify({ key, userId });
-    isSelected
-      ? this.selectedValue.set(undefined)
-      : this.selectedValue.set({ key, userId });
+  suggestedValues = computed(() => {
+    const key = this.selectedValue()?.key as keyof Applicant;
+    const value = this.selectedValue()?.value;
+    const applicants = this.apService.allApplicants();
+    let values: string[] = [];
+
+    if (key === 'skills') {
+      let allValues: string[] = [];
+      applicants.map((ap) => {
+        ap[key].map((s) => allValues.push(s));
+      });
+      values = Array.from(new Set(allValues));
+    } else {
+      values = Array.from(new Set(applicants.map((ap) => ap[key])));
+    }
+
+    values.sort((a, b) => (value?.includes(a) && !value.includes(b) ? -1 : 1));
+    return values || [];
+  });
+
+  isEditableAndEditing(k: string, v: string, id: string) {
+    const key = this.selectedValue()?.key;
+    const value = this.selectedValue()?.value;
+    const userId = this.selectedValue()?.userId;
+
+    const editable = !!!['added', 'attachments'].includes(k);
+    return k === key && v === value && id === userId && editable;
   }
 
   onSelectKey(key: string) {
@@ -65,5 +113,41 @@ export class TableViewComponent {
       key: key,
       order: this.sortConfig().order === 'desc' ? 'asc' : 'desc',
     });
+  }
+
+  onSelectValue(e: Event, key: string, value: string, userId: string) {
+    const requiredTarget = e.target as Element;
+    if (!['TD', 'P'].includes(requiredTarget.tagName)) return;
+
+    const isSelected =
+      JSON.stringify(this.selectedValue()) ===
+      JSON.stringify({ key, value, userId });
+    isSelected
+      ? this.selectedValue.set(undefined)
+      : this.selectedValue.set({ key, value, userId });
+
+    this.newValueInput.set(
+      ['name', 'email', 'website'].includes(key) && !isSelected ? value : ''
+    );
+  }
+
+  onChangeValue(
+    key: string,
+    newValue: string,
+    userId: string,
+    action?: 'add' | 'remove'
+  ) {
+    let modifiedNewValue: string | string[] =
+      action === 'remove' ? '' : newValue;
+    if (key === 'skills') {
+      const applicant = this.apService.getApplicantById(userId);
+      let newSkills =
+        action === 'remove'
+          ? applicant?.skills.filter((s) => s !== newValue) || []
+          : [...(applicant?.skills || []), newValue];
+      modifiedNewValue = newSkills;
+    }
+    let newData = { [key]: modifiedNewValue };
+    this.apService.updateApplicant(userId, newData);
   }
 }

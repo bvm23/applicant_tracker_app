@@ -39,6 +39,10 @@ export class ApplicantService {
     });
   }
 
+  getApplicantById(userId: string) {
+    return this.applicants().find((ap) => ap.id === userId);
+  }
+
   addApplicant(user: Applicant, isDuplicate: boolean = false) {
     let newUser = isDuplicate
       ? { ...user, id: Math.random().toString() }
