@@ -5,6 +5,7 @@ import {
   inject,
   input,
   signal,
+  viewChild,
 } from '@angular/core';
 import { ApplicantService } from '../applicant.service';
 import { HighlightDirective } from '../../../shared/directives/highlight.directive';
@@ -38,6 +39,10 @@ import { ActionButtonComponent } from '../../../shared/components/action-button/
 export class TableViewComponent {
   private apService = inject(ApplicantService);
   private filterService = inject(FilterService);
+
+  private newValueInputComponent = viewChild<ElementRef<HTMLInputElement>>(
+    'newValueInputComponent'
+  );
 
   keys = [
     'id',
@@ -129,6 +134,10 @@ export class TableViewComponent {
     this.newValueInput.set(
       ['name', 'email', 'website'].includes(key) && !isSelected ? value : ''
     );
+
+    setTimeout(() => {
+      this.newValueInputComponent()?.nativeElement.focus();
+    });
   }
 
   onChangeValue(

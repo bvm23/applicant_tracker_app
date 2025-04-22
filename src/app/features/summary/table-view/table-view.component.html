@@ -83,15 +83,8 @@
         {{ val[0] === "added" ? (val[1] | date : "medium") : val[1] }}
         }
       </p>
-      } }
-      <at-popup-menu
-        class="value-menu"
-        [style]="{
-          display: isEditableAndEditing(val[0], val[1], ap[0][1])
-            ? 'block'
-            : 'none'
-        }"
-      >
+      } } @if (isEditableAndEditing(val[0], val[1], ap[0][1])) {
+      <at-popup-menu class="value-menu">
         <article class="content">
           <div class="input-div">
             <input
@@ -99,6 +92,7 @@
               id="newValueInput"
               name="newValueInput"
               [(ngModel)]="newValueInput"
+              #newValueInputComponent
             />
             <at-action-button
               [style]="{
@@ -157,6 +151,7 @@
           </div>
         </article>
       </at-popup-menu>
+      }
     </td>
     }
   </tr>
