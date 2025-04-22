@@ -6,6 +6,23 @@
       title="Close"
       (click)="onClose()"
     />
+    <div
+      [style]="{
+        display: 'flex'
+      }"
+    >
+      <at-action-button
+        [icon]="upArrow"
+        [size]="18"
+        title="prev"
+        (click)="changeApplicant('prev')"
+      /><at-action-button
+        [icon]="downArrow"
+        [size]="18"
+        title="next"
+        (click)="changeApplicant('next')"
+      />
+    </div>
   </article>
   <article class="info">
     <input

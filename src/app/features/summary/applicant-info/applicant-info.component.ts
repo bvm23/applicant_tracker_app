@@ -8,14 +8,20 @@ import {
   viewChild,
 } from '@angular/core';
 import { Applicant } from '../applicant.model';
-import { ChevronsRight, LucideAngularModule } from 'lucide-angular';
+import {
+  ChevronsRight,
+  CircleX,
+  ChevronUp,
+  ChevronDown,
+  LucideAngularModule,
+} from 'lucide-angular';
 import { ActionButtonComponent } from '../../../shared/components/action-button/action-button.component';
 import { ApplicantService } from '../applicant.service';
 import { DatePipe } from '@angular/common';
 import { HighlightDirective } from '../../../shared/directives/highlight.directive';
 import { PopupMenuComponent } from '../../../shared/components/popup-menu/popup-menu.component';
 import { debounce } from '../../../shared/utils/utils';
-import { CircleX } from 'lucide-angular';
+import { FilterService } from '../../../shared/services/filter.service';
 
 @Component({
   selector: 'at-applicant-info',
@@ -32,7 +38,9 @@ import { CircleX } from 'lucide-angular';
 })
 export class ApplicantInfoComponent {
   private apService = inject(ApplicantService);
+  private filterService = inject(FilterService);
   private destroyRef = inject(DestroyRef);
+
   newNameInputComponent =
     viewChild<ElementRef<HTMLInputElement>>('newNameInput');
   newInfoInputComponent =
@@ -42,6 +50,8 @@ export class ApplicantInfoComponent {
 
   closeBtnIcon = ChevronsRight;
   closeBtnIcon2 = CircleX;
+  upArrow = ChevronUp;
+  downArrow = ChevronDown;
 
   openedMenu = signal<string | undefined>('');
   openedMenuValues = signal<string[]>([]);
@@ -62,6 +72,37 @@ export class ApplicantInfoComponent {
     this.newNameInputComponent()?.nativeElement.focus();
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
+
+  changeApplicant(action: string) {
+    const selectedApplicant = this.applicant()!;
+    const applicantsInSameStage = this.apService
+      .allApplicants()
+      .filter((ap) => ap.stage === selectedApplicant.stage);
+    const sortedIds = this.filterService
+      .sort(applicantsInSameStage)
+      .map((ap) => ap.id);
+
+    const firstIndex = 0;
+    const lastIndex = sortedIds.length - 1;
+
+    if (firstIndex === lastIndex) return;
+
+    const selectedIndex = sortedIds.findIndex(
+      (id) => id === selectedApplicant.id
+    );
+    let nextIndex: number =
+      action === 'next' ? selectedIndex + 1 : selectedIndex - 1;
+
+    if (action === 'next' && nextIndex >= sortedIds.length) {
+      return;
+    }
+    if (action === 'prev' && nextIndex < 0) {
+      return;
+    }
+
+    let nextApplicantId: string = sortedIds[nextIndex];
+    this.apService.selectApplicant(nextApplicantId);
   }
 
   isEditingValue(key: string) {

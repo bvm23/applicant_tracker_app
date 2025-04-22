@@ -18,6 +18,10 @@ section {
 
   .controls {
     width: fit-content;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    height: max-content;
   }
 
   .info {
