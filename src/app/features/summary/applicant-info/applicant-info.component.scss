@@ -10,18 +10,23 @@
 section {
   background-color: c.$bg_2;
   position: fixed;
-  inset: 0 0 0 50%;
+  right: 0;
+  top: 0;
+  width: 50%;
+  min-height: max-content;
+  height: 100%;
+  overflow-y: auto;
   padding: 0.6rem;
   display: grid;
-  grid-template-rows: 1fr 14fr;
-  gap: 1rem;
+  align-content: flex-start;
+  gap: 2.6rem;
 
   .controls {
     width: fit-content;
     display: flex;
     flex-direction: row;
     gap: 1rem;
-    height: max-content;
+    height: fit-content;
   }
 
   .info {
