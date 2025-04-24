@@ -7,6 +7,12 @@
   text-align: left;
 }
 
+.disabled {
+  background-color: transparent;
+  opacity: 0.5;
+  cursor: auto;
+}
+
 section {
   background-color: c.$bg_2;
   position: fixed;

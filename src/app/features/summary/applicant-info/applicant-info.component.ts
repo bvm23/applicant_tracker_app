@@ -74,34 +74,51 @@ export class ApplicantInfoComponent {
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
-  changeApplicant(action: string) {
-    const selectedApplicant = this.applicant()!;
-    const applicantsInSameStage = this.apService
-      .allApplicants()
-      .filter((ap) => ap.stage === selectedApplicant.stage);
-    const sortedIds = this.filterService
-      .sort(applicantsInSameStage)
-      .map((ap) => ap.id);
+  applicantsInSameStage = computed(() =>
+    this.filterService
+      .sort(
+        this.apService
+          .allApplicants()
+          .filter((ap) => ap.stage === this.applicant()?.stage)
+      )
+      .map((ap) => ap.id)
+  );
 
+  selectedApplicantIndex = computed(() =>
+    this.applicantsInSameStage().findIndex(
+      (apId) => apId === this.applicant()?.id
+    )
+  );
+
+  nextButtonIsDisabled = computed(
+    () =>
+      this.applicantsInSameStage().length <= 1 ||
+      this.selectedApplicantIndex() === this.applicantsInSameStage().length - 1
+  );
+
+  prevButtonIsDisabled = computed(
+    () =>
+      this.applicantsInSameStage().length <= 1 ||
+      this.selectedApplicantIndex() === 0
+  );
+
+  changeApplicant(action: 'prev' | 'next') {
     const firstIndex = 0;
-    const lastIndex = sortedIds.length - 1;
-
+    const lastIndex = this.applicantsInSameStage().length - 1;
     if (firstIndex === lastIndex) return;
 
-    const selectedIndex = sortedIds.findIndex(
-      (id) => id === selectedApplicant.id
-    );
+    const selectedIndex = this.selectedApplicantIndex();
     let nextIndex: number =
       action === 'next' ? selectedIndex + 1 : selectedIndex - 1;
 
-    if (action === 'next' && nextIndex >= sortedIds.length) {
-      return;
-    }
-    if (action === 'prev' && nextIndex < 0) {
+    if (
+      (action === 'next' && nextIndex > lastIndex) ||
+      (action === 'prev' && nextIndex < firstIndex)
+    ) {
       return;
     }
 
-    let nextApplicantId: string = sortedIds[nextIndex];
+    let nextApplicantId: string = this.applicantsInSameStage()[nextIndex];
     this.apService.selectApplicant(nextApplicantId);
   }
 
