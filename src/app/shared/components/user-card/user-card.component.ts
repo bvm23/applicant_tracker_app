@@ -13,10 +13,17 @@ import { ActionButtonComponent } from '../action-button/action-button.component'
 import { Ellipsis } from 'lucide-angular';
 import { LucideIcon } from '../../../core/constants/icons.constants';
 import { ApplicantService } from '../../../features/summary/applicant.service';
+import { ApplicantPlaceholder } from '../../../core/constants/data.constants';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'at-user-card',
-  imports: [HighlightDirective, ActionButtonComponent],
+  imports: [HighlightDirective, ActionButtonComponent, ReactiveFormsModule],
   templateUrl: './user-card.component.html',
   styleUrl: './user-card.component.scss',
   host: {
@@ -28,11 +35,23 @@ export class UserCardComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private apService = inject(ApplicantService);
 
-  user = input.required<Applicant>();
+  optionIcon: LucideIcon = Ellipsis;
+
+  newForm = new FormGroup({
+    name: new FormControl('', { validators: [Validators.required] }),
+    email: new FormControl('', {
+      validators: [Validators.required, Validators.email],
+    }),
+    hiringManager: new FormControl('', { validators: [Validators.required] }),
+    location: new FormControl('', { validators: Validators.required }),
+    role: new FormControl('', { validators: Validators.required }),
+    skills: new FormControl(''),
+  });
+
+  new = input<boolean>(false);
+  user = input<Applicant>(ApplicantPlaceholder);
   focus = input<{ id: string; x: number; y: number }>();
   focusChange = output<{ id: string; x: number; y: number }>();
-
-  optionIcon: LucideIcon = Ellipsis;
 
   ngOnInit(): void {
     const previousColor = this.el.nativeElement.style.borderColor;
@@ -61,5 +80,9 @@ export class UserCardComponent implements OnInit {
     if (e.target === this.el.nativeElement) {
       this.apService.selectApplicant(this.user().id);
     }
+  }
+
+  onSubmit() {
+    console.log('form submited');
   }
 }

@@ -1,4 +1,67 @@
-@if (focus()?.id===user().id) {
+@if (new()) {
+<form [formGroup]="newForm" (ngSubmit)="onSubmit()">
+  <div class="input-container">
+    <input
+      type="text"
+      name="name"
+      id="name"
+      placeholder="Type a name..."
+      [class]="['input', 'name']"
+      formControlName="name"
+    />
+  </div>
+  <div class="input-container">
+    <input
+      type="email"
+      name="email"
+      id="email"
+      placeholder="Add Email"
+      class="input"
+      formControlName="email"
+    />
+  </div>
+  <div class="input-container">
+    <input
+      type="text"
+      name="hiringManager"
+      id="hiringManager"
+      placeholder="Add Hiring Manager"
+      class="input"
+      formControlName="hiringManager"
+    />
+  </div>
+  <div class="input-container">
+    <input
+      type="text"
+      name="location"
+      id="location"
+      placeholder="Add Location"
+      class="input"
+      formControlName="location"
+    />
+  </div>
+  <div class="input-container">
+    <input
+      type="text"
+      name="role"
+      id="role"
+      placeholder="Add Role"
+      class="input"
+      formControlName="role"
+    />
+  </div>
+  <div class="input-container">
+    <input
+      type="text"
+      name="skills"
+      id="skills"
+      placeholder="Add Skills"
+      class="input"
+      formControlName="skills"
+    />
+  </div>
+</form>
+}@else { @if (focus()?.id===user().id) {
 <div class="backdrop"></div>
 }
 <at-action-button
@@ -41,3 +104,4 @@
   <p>{{ skill }}</p>
   }
 </div>
+}

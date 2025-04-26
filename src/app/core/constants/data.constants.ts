@@ -1,3 +1,4 @@
+import { type Applicant } from '../../features/summary/applicant.model';
 import { icons } from './icons.constants';
 
 export const Data = [
@@ -146,3 +147,19 @@ export const Stages = [
 ];
 
 export const Keys = Object.keys(Data[1]).filter((valKey) => valKey !== 'id');
+
+export const ApplicantPlaceholder: Applicant = {
+  id: '',
+  name: '',
+  role: '',
+  stage: '',
+  email: '',
+  hiringManager: '',
+  attachments: '',
+  website: '',
+  skills: [],
+  location: '',
+  employment: '',
+  source: '',
+  added: '',
+};

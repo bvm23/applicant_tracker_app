@@ -8,6 +8,15 @@
     @for (applicant of stage.people; track applicant.id) {
     <at-user-card [user]="applicant" [(focus)]="focused"></at-user-card>
     }
+    <at-user-card
+      [new]="true"
+      [style]="{
+        display: addingNewApplicantToStage() === stage.value ? 'block' : 'none'
+      }"
+    ></at-user-card>
+    <p class="new-btn" (click)="addingNewApplicantToStage.set(stage.value)">
+      + New
+    </p>
   </article>
 </section>
 } @if (focusedUser()){

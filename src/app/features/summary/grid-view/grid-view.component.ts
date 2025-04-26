@@ -15,7 +15,10 @@ import { CardMenuComponent } from '../../../shared/components/popup-menu/card-me
 export class GridViewComponent {
   private apService = inject(ApplicantService);
   private filterService = inject(FilterService);
+
   focused = signal<{ id: string; x: number; y: number } | undefined>(undefined);
+  addingNewApplicantToStage = signal<string | undefined>(undefined);
+
   focusedUser = computed(() =>
     this.applicants().find((appl) => appl.id === this.focused()?.id)
   );
