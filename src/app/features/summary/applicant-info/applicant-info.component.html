@@ -1,4 +1,13 @@
-<section>
+@if (selectedPeek()==='center') {
+<div id="backdrop" (click)="onClose()"></div>
+}
+<section
+  [class]="{
+    default: true,
+    side: selectedPeek()==='side',
+    center: selectedPeek()==='center',
+  }"
+>
   <article class="controls">
     <at-action-button
       [icon]="closeBtnIcon"
@@ -6,6 +15,16 @@
       title="Close"
       (click)="onClose()"
     />
+    <div class="view-opt-container">
+      <at-action-button
+        [icon]="selectedPeek() === 'side' ? fullscreenIcon : sideScreenIcon"
+        [size]="16"
+        [title]="selectedPeek() === 'side' ? 'Modal View' : 'Side View'"
+        (click)="
+          selectedPeek.set(selectedPeek() === 'side' ? 'center' : 'side')
+        "
+      />
+    </div>
     <div
       [style]="{
         display: 'flex'

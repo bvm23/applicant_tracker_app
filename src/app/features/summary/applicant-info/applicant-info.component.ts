@@ -13,6 +13,8 @@ import {
   CircleX,
   ChevronUp,
   ChevronDown,
+  Fullscreen,
+  PanelRight,
   LucideAngularModule,
 } from 'lucide-angular';
 import { ActionButtonComponent } from '../../../shared/components/action-button/action-button.component';
@@ -52,11 +54,14 @@ export class ApplicantInfoComponent {
   closeBtnIcon2 = CircleX;
   upArrow = ChevronUp;
   downArrow = ChevronDown;
+  sideScreenIcon = PanelRight;
+  fullscreenIcon = Fullscreen;
 
   openedMenu = signal<string | undefined>('');
   openedMenuValues = signal<string[]>([]);
   applicant = signal<Applicant | undefined>(undefined);
   comments = signal<{ value: string; addedTime: string }[]>([]);
+  selectedPeek = signal<'side' | 'center'>('side');
 
   entries = computed(() =>
     Object.entries(this.applicant() as object).filter(
@@ -101,6 +106,10 @@ export class ApplicantInfoComponent {
       this.applicantsInSameStage().length <= 1 ||
       this.selectedApplicantIndex() === 0
   );
+
+  switchView(view: 'side' | 'center') {
+    this.selectedPeek.set(view);
+  }
 
   changeApplicant(action: 'prev' | 'next') {
     const firstIndex = 0;
