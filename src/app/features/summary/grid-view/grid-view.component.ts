@@ -43,4 +43,8 @@ export class GridViewComponent {
   clearFocus() {
     this.focused.set(undefined);
   }
+
+  onAddNewCard() {
+    this.addingNewApplicantToStage.set(undefined);
+  }
 }

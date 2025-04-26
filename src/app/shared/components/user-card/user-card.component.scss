@@ -117,6 +117,7 @@ form {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
+  position: relative;
 
   .input {
     background: transparent;
@@ -125,6 +126,7 @@ form {
     color: c.$text_2;
     width: 100%;
     text-align: left;
+    padding-right: 1.8rem;
 
     &::placeholder {
       color: c.$bg_6;
@@ -132,5 +134,11 @@ form {
   }
   .name {
     font-size: 1.1rem;
+  }
+
+  .submit-btn {
+    position: absolute;
+    bottom: -0.5rem;
+    right: -0.5rem;
   }
 }

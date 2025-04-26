@@ -9,10 +9,11 @@
     <at-user-card [user]="applicant" [(focus)]="focused"></at-user-card>
     }
     <at-user-card
-      [new]="true"
+      [createIn]="stage.value"
       [style]="{
         display: addingNewApplicantToStage() === stage.value ? 'block' : 'none'
       }"
+      (added)="onAddNewCard()"
     ></at-user-card>
     <p class="new-btn" (click)="addingNewApplicantToStage.set(stage.value)">
       + New

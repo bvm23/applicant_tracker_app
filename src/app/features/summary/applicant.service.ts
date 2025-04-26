@@ -2,6 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { Applicant } from './applicant.model';
 import { Data, Stages } from '../../core/constants/data.constants';
 import { BehaviorSubject } from 'rxjs';
+import { type InputApplicantData } from './applicant.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class ApplicantService {
   selectedApplicant$ = new BehaviorSubject<Applicant | undefined>(undefined);
 
   constructor() {
-    this.applicants.set(Data);
+    this.applicants.set(Data as Applicant[]);
   }
 
   stages = Stages;
@@ -43,11 +44,25 @@ export class ApplicantService {
     return this.applicants().find((ap) => ap.id === userId);
   }
 
-  addApplicant(user: Applicant, isDuplicate: boolean = false) {
-    let newUser = isDuplicate
-      ? { ...user, id: Math.random().toString() }
-      : user;
-    this.applicants.update((existing) => [...existing, newUser]);
+  addApplicant(inputData: InputApplicantData) {
+    const newApplicant: Applicant = {
+      ...inputData,
+      attachments: '',
+      source: '',
+      website: '',
+      employment: 'looking',
+      id: Math.random().toString(),
+      added: new Date().toISOString(),
+    };
+    this.applicants.update((existing) => [...existing, newApplicant]);
+    return;
+  }
+
+  duplicateApplicant(id: string) {
+    const user = this.applicants().find((ap) => ap.id === id);
+    if (!user) return;
+    let duplicateUser = { ...user, id: Math.random().toString() };
+    this.applicants.update((existing) => [...existing, duplicateUser]);
   }
 
   selectApplicant(userId: string) {

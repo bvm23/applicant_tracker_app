@@ -47,7 +47,7 @@ export class CardMenuComponent {
   }
 
   onDuplicate() {
-    this.apService.addApplicant(this.user(), true);
+    this.apService.duplicateApplicant(this.user().id);
     this.closeMenu();
   }
 

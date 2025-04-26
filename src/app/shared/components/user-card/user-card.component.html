@@ -1,4 +1,4 @@
-@if (new()) {
+@if (!!createInStage()) {
 <form [formGroup]="newForm" (ngSubmit)="onSubmit()">
   <div class="input-container">
     <input
@@ -60,6 +60,14 @@
       formControlName="skills"
     />
   </div>
+  <button
+    at-action-button
+    type="submit"
+    class="submit-btn"
+    [icon]="checkIcon"
+    color="#13814a"
+    title="submit"
+  ></button>
 </form>
 }@else { @if (focus()?.id===user().id) {
 <div class="backdrop"></div>

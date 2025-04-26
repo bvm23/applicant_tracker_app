@@ -9,7 +9,12 @@ export interface Applicant {
   website: string;
   skills: string[];
   location: string;
-  employment: string;
+  employment: 'looking' | 'freelance' | 'employed';
   source: string;
   added: string;
 }
+
+export type InputApplicantData = Omit<
+  Applicant,
+  'id' | 'attachments' | 'website' | 'employment' | 'source' | 'added'
+>;

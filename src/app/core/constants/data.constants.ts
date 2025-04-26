@@ -159,7 +159,7 @@ export const ApplicantPlaceholder: Applicant = {
   website: '',
   skills: [],
   location: '',
-  employment: '',
+  employment: 'looking',
   source: '',
   added: '',
 };
