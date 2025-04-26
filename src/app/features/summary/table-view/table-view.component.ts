@@ -88,8 +88,16 @@ export class TableViewComponent {
     const key = this.selectedValue()?.key as keyof Applicant;
     const value = this.selectedValue()?.value;
     const applicants = this.apService.allApplicants();
-    let values: string[] = [];
+    let values = this.generateValues(key, value, applicants);
+    return values;
+  });
 
+  generateValues(
+    key: keyof Applicant,
+    value: string | undefined,
+    applicants: Applicant[]
+  ) {
+    let values: string[] = [];
     if (key === 'skills') {
       let allValues: string[] = [];
       applicants.map((ap) => {
@@ -99,10 +107,11 @@ export class TableViewComponent {
     } else {
       values = Array.from(new Set(applicants.map((ap) => ap[key])));
     }
-
-    values.sort((a, b) => (value?.includes(a) && !value.includes(b) ? -1 : 1));
-    return values || [];
-  });
+    let sortedValues = values.sort((a, b) =>
+      value?.includes(a) && !value.includes(b) ? -1 : 1
+    );
+    return sortedValues;
+  }
 
   isEditableAndEditing(k: string, v: string, id: string) {
     const key = this.selectedValue()?.key;

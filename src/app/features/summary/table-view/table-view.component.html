@@ -139,7 +139,7 @@
                 backgroundColor: newValueInput() === item ? '#353535' : ''
               }"
             >
-              {{ item ? item : undefined }}
+              {{ item || undefined }}
               @if(val[1].includes(item)){
               <at-action-button
                 [icon]="removeIcon"
