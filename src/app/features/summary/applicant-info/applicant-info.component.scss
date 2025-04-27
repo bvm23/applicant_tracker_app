@@ -33,8 +33,9 @@ section.center {
 section.side {
   right: 0;
   top: 0;
-  width: clamp(32rem, 40%, 50%);
+  width: clamp(38rem, 40%, 50%);
   height: 100%;
+  box-sizing: border-box;
 }
 
 section.default {
@@ -110,6 +111,7 @@ section.default {
           position: relative;
           cursor: pointer;
           padding: 0 0.4rem;
+          min-width: 8rem;
 
           &:hover {
             background-color: c.$bg_3;
