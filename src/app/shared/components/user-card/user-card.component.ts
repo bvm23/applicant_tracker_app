@@ -109,13 +109,13 @@ export class UserCardComponent implements OnInit {
 
     const formData = this.newForm.value;
     const newApplicantData: InputApplicantData = {
-      name: formData.name!,
-      email: formData.email!,
-      location: formData.location!,
-      role: formData.role!,
-      hiringManager: formData.hiringManager!,
+      name: formData.name!.trim().toLowerCase(),
+      email: formData.email!.trim(),
+      location: formData.location!.trim().toLowerCase(),
+      role: formData.role!.trim().toLowerCase(),
+      hiringManager: formData.hiringManager!.trim().toLowerCase(),
       stage: this.createInStage()!,
-      skills: formData.skills?.split(',')!,
+      skills: formData.skills?.split(',').map((s) => s.trim().toLowerCase())!,
     };
 
     this.apService.addApplicant(newApplicantData);

@@ -1,4 +1,7 @@
 import { Directive, ElementRef, inject, input } from '@angular/core';
+import { StageColors, Colors } from '../../core/constants/data.constants';
+
+type colorData = { value: string; color: string }[];
 
 @Directive({
   selector: '[atHighlight], at-action-button[atHighlight]',
@@ -8,109 +11,89 @@ export class HighlightDirective {
     HTMLParagraphElement | HTMLSpanElement
   >;
 
-  colors = {
-    green: '#13814a',
-    blue: '#22648d',
-    red: '#792223',
-    orange: '#965218',
-    yellow: '#8a6d0d',
-    grey: '#353535',
-  };
+  stageColors = StageColors;
+  colors = Colors;
 
   viewFor = input<string>('', { alias: 'atHighlight' });
-  viewValue = input<string>();
+  viewValue = input<string>('');
   fontSize = input<string>();
   padding = input<string>();
   textTransform = input<string>();
 
-  setHighlight() {
-    let color = '';
-    switch (this.viewFor()) {
+  /*
+   * generate unique color for the values passed to the function
+   */
+  generateColor(key: string, value: string) {
+    if (['name', 'email', 'hiringManager', 'website', 'added'].includes(key)) {
+      return '';
+    }
+    const savedColorData = localStorage.getItem('colors');
+    const parsedColorData: colorData = savedColorData
+      ? (JSON.parse(savedColorData) as colorData)
+      : [];
+
+    let valueExist = parsedColorData?.find((data) => data.value === value);
+
+    if (valueExist && Object.entries(valueExist).length > 0) {
+      const savedColor = valueExist.color;
+      return savedColor;
+    }
+
+    const random = Math.floor(Math.random() * Object.keys(this.colors).length);
+    let color = Object.values(this.colors)[random];
+    let newData: colorData = [
+      ...parsedColorData,
+      { value, color },
+    ] as colorData;
+
+    localStorage.setItem('colors', JSON.stringify(newData));
+    return color;
+  }
+
+  /*
+   * set the color and styles to the component based on the key
+   */
+  setHighlight(key: string, value: string, color: string) {
+    let generatedColor = '';
+    switch (key) {
       case 'stage':
-        switch (this.viewValue()) {
+        switch (value) {
           case 'lead':
-            color = this.colors.orange;
+            generatedColor = this.stageColors.orange;
             break;
           case 'screen':
-            color = this.colors.red;
+            generatedColor = this.stageColors.red;
             break;
           case 'interview':
-            color = this.colors.yellow;
+            generatedColor = this.stageColors.yellow;
             break;
           case 'offer':
-            color = this.colors.blue;
+            generatedColor = this.stageColors.blue;
             break;
           case 'hired':
-            color = this.colors.green;
+            generatedColor = this.stageColors.green;
             break;
           default:
-            color = '';
-        }
-        break;
-      case 'location':
-        switch (this.viewValue()) {
-          case 'san francisco':
-            color = this.colors.blue;
-            break;
-          case 'new york':
-            color = this.colors.green;
-            break;
-          case 'tokyo':
-            color = this.colors.red;
-            break;
-          default:
-            color = '';
-        }
-        break;
-      case 'role':
-        switch (this.viewValue()) {
-          case 'engineering - front end':
-            color = this.colors.blue;
-            break;
-          case 'vp of marketing':
-            color = this.colors.red;
-            break;
-          case 'design':
-            color = this.colors.orange;
-            break;
-          case 'support lead':
-            color = this.colors.grey;
-            break;
-          case 'engineering - ops':
-            color = this.colors.blue;
-            break;
-          default:
-            color = '';
+            generatedColor = '';
         }
         break;
       case 'skills':
-        switch (this.viewValue()) {
-          default:
-            color = this.colors.grey;
-        }
-        break;
-      case 'employment':
-        switch (this.viewValue()) {
-          default:
-            color = this.colors.grey;
-        }
+        generatedColor = this.stageColors.grey;
         break;
       case 'source':
-        switch (this.viewValue()) {
-          default:
-            color = this.colors.grey;
-        }
+        generatedColor = this.stageColors.grey;
         break;
       default:
-        color = '';
+        generatedColor = color;
     }
-    this.el.nativeElement.style.backgroundColor = color;
+    this.el.nativeElement.style.backgroundColor = generatedColor;
     this.el.nativeElement.style.color = '#c9c5c5';
-    this.el.nativeElement.style.padding = this.padding()
-      ? this.padding()!
-      : ['stage', 'skills', 'role', 'location'].includes(this.viewFor())
-      ? '0 0.4rem'
-      : '0';
+    this.el.nativeElement.style.padding = generatedColor
+      ? this.padding()
+        ? this.padding() || ''
+        : '0 0.4rem'
+      : '';
+
     this.el.nativeElement.style.borderRadius = '0.2rem';
     this.el.nativeElement.style.fontWeight =
       this.viewFor() === 'stage' ? '500' : '400';
@@ -123,6 +106,7 @@ export class HighlightDirective {
   }
 
   ngOnInit() {
-    this.setHighlight();
+    const color = this.generateColor(this.viewFor(), this.viewValue());
+    this.setHighlight(this.viewFor(), this.viewValue(), color);
   }
 }
