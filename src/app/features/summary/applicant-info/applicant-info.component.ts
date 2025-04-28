@@ -24,7 +24,7 @@ import { ApplicantService } from '../applicant.service';
 import { debounce } from '../../../shared/utils/utils';
 import { FilterService } from '../../../shared/services/filter.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime } from 'rxjs';
+import { debounceTime, map, OperatorFunction } from 'rxjs';
 
 @Component({
   selector: 'at-applicant-info',
@@ -102,12 +102,29 @@ export class ApplicantInfoComponent implements OnInit {
     });
 
     this.form.valueChanges
-      .pipe(debounceTime(500))
+      .pipe(debounceTime(500), this.detectInputValueOnly())
       .subscribe({ next: (value) => console.log(value) });
 
     this.newNameInputComponent()?.nativeElement.focus();
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
+
+  detectInputValueOnly(): OperatorFunction<unknown, Partial<Applicant>> {
+    const applicant = this.applicant() as Applicant;
+
+    return map((ap) => {
+      let inputApplicant = ap as Partial<Applicant>;
+      const keys = Object.keys(inputApplicant);
+      let changedValues = {};
+      keys.map((k) => {
+        let key = k as keyof Partial<Applicant>;
+        if (inputApplicant[key] !== applicant[key]) {
+          Object.assign(changedValues, { [key]: inputApplicant[key] });
+        }
+      });
+      return changedValues;
+    });
   }
 
   applicantsInSameStage = computed(() =>
