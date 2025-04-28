@@ -45,117 +45,105 @@
       />
     </div>
   </article>
-  <article class="info">
+
+  <form [formGroup]="form" class="info">
     <input
       type="text"
       name="newInputValue"
       id="newInputValue"
       class="name"
-      [value]="applicant()?.name"
-      (keyup)="debouncedUpdateValue('name', newNameInput.value)"
+      formControlName="name"
       #newNameInput
     />
     <div class="property-container">
-      @for (entry of entries(); track $index) {
       <div class="property">
         <div class="key">
-          <p [title]="entry[0]" class="key-data">
-            {{ entry[0] === "hiringManager" ? "hiring manager" : entry[0] }}
-          </p>
+          <p class="key-data">role</p>
         </div>
-        <div
-          class="value"
-          (click)="toggleValueMenu($event, entry[0])"
-          [style]="{
-            backgroundColor: isEditingValue(entry[0]) ? '#404040' : ''
-          }"
-        >
-          @if(typeof entry[1]==='object' && entry[1].length>0){ @for (item of
-          entry[1]; track $index){
-          <p
-            [title]="entry[1][$index]"
-            [atHighlight]="entry[0]"
-            [viewValue]="entry[1]"
-            fontSize="1rem"
-            class="value-data"
-            textTransform="capitalize"
-          >
-            {{ entry[1][$index] }}
-            @if (isEditingValue(entry[0])) {
-            <span>
-              <lucide-icon
-                [img]="closeBtnIcon2"
-                size="13"
-                class="icon"
-                title="remove"
-                (click)="removeValue($event, entry[0], entry[1][$index])"
-              ></lucide-icon>
-            </span>
-            }
-          </p>
-          }}@else{
-          <p
-            [class]="{
-              'value-data': true,
-              'empty-value': !entry[1] || entry[1].length === 0
-            }"
-            [title]="entry[1]"
-            fontSize="1rem"
-            [textTransform]="
-              !['email', 'website'].includes(entry[0]) ? 'capitalize' : ''
-            "
-            atHighlight
-          >
-            @if (entry[0]==='hiringManager') {
-            <span class="image">
-              <img
-                src="https://img.icons8.com/?size=100&id=kDoeg22e5jUY&format=png&color=000000"
-                loading="lazy"
-                alt="avatar"
-              />
-            </span>
-            }
-            {{
-              entry[0] === "added"
-                ? (entry[1] | date : "medium")
-                : !entry[1] || entry[1].length === 0
-                ? "empty"
-                : entry[1]
-            }}
-          </p>
-          }
+        <div class="value">
+          <input formControlName="role" />
         </div>
-        @if (isEditingValue(entry[0])) {
-        <at-popup-menu class="value-menu" backgroundColor="#272727">
-          <div class="content">
-            @if(isEditingValue('email') || isEditingValue('website')){
-            <div class="new-input-div">
-              <input
-                type="text"
-                name="newInputValue"
-                id="newInputValue"
-                [value]="entry[1]"
-                (keyup)="debouncedUpdateValue(entry[0], newInfoInput.value)"
-                #newInfoInput
-              />
-            </div>
-            }@else {
-            <span>select an option or create one</span>
-            <div class="values">
-              @for (item of openedMenuValues(); track $index) {
-              <div class="value-holder" (click)="updateValue(entry[0], item)">
-                <p class="value">
-                  {{ item }}
-                </p>
-              </div>
-              }
-            </div>
-            }
-          </div>
-        </at-popup-menu>
-        }
       </div>
-      }
+      <div class="property">
+        <div class="key">
+          <p class="key-data">email</p>
+        </div>
+        <div class="value">
+          <input formControlName="email" />
+        </div>
+      </div>
+      <div class="property">
+        <div class="key">
+          <p class="key-data">employment</p>
+        </div>
+        <div class="value">
+          <input formControlName="employment" />
+        </div>
+      </div>
+      <div class="property">
+        <div class="key">
+          <p class="key-data">location</p>
+        </div>
+        <div class="value">
+          <input formControlName="location" />
+        </div>
+      </div>
+      <div class="property">
+        <div class="key">
+          <p class="key-data">skills</p>
+        </div>
+        <div class="value">
+          <input formControlName="skills" />
+        </div>
+      </div>
+      <div class="property">
+        <div class="key">
+          <p class="key-data">source</p>
+        </div>
+        <div class="value">
+          <input formControlName="source" />
+        </div>
+      </div>
+      <div class="property">
+        <div class="key">
+          <p class="key-data">stage</p>
+        </div>
+        <div class="value">
+          <input formControlName="stage" />
+        </div>
+      </div>
+      <div class="property">
+        <div class="key">
+          <p class="key-data">website</p>
+        </div>
+        <div class="value">
+          <input formControlName="website" />
+        </div>
+      </div>
+      <div class="property">
+        <div class="key">
+          <p class="key-data">attachments</p>
+        </div>
+        <div class="value">
+          <input formControlName="attachments" />
+        </div>
+      </div>
+      <div class="property">
+        <div class="key">
+          <p class="key-data">hiring manager</p>
+        </div>
+        <div class="value">
+          <input formControlName="hiringManager" />
+        </div>
+      </div>
+      <div class="property">
+        <div class="key">
+          <p class="key-data">added</p>
+        </div>
+        <div class="value">
+          <input formControlName="added" />
+        </div>
+      </div>
     </div>
     <article class="extras">
       <div class="comments">
@@ -177,5 +165,5 @@
         </ul>
       </div>
     </article>
-  </article>
+  </form>
 </section>

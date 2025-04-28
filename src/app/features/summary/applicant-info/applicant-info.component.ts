@@ -2,12 +2,14 @@ import {
   Component,
   computed,
   DestroyRef,
+  effect,
   ElementRef,
   inject,
+  OnInit,
   signal,
   viewChild,
 } from '@angular/core';
-import { Applicant } from '../applicant.model';
+import { type Applicant } from '../applicant.model';
 import {
   ChevronsRight,
   CircleX,
@@ -19,26 +21,23 @@ import {
 } from 'lucide-angular';
 import { ActionButtonComponent } from '../../../shared/components/action-button/action-button.component';
 import { ApplicantService } from '../applicant.service';
-import { DatePipe } from '@angular/common';
-import { HighlightDirective } from '../../../shared/directives/highlight.directive';
-import { PopupMenuComponent } from '../../../shared/components/popup-menu/popup-menu.component';
 import { debounce } from '../../../shared/utils/utils';
 import { FilterService } from '../../../shared/services/filter.service';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'at-applicant-info',
   imports: [
     LucideAngularModule,
     ActionButtonComponent,
-    DatePipe,
-    HighlightDirective,
-    PopupMenuComponent,
     LucideAngularModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './applicant-info.component.html',
   styleUrl: './applicant-info.component.scss',
 })
-export class ApplicantInfoComponent {
+export class ApplicantInfoComponent implements OnInit {
   private apService = inject(ApplicantService);
   private filterService = inject(FilterService);
   private destroyRef = inject(DestroyRef);
@@ -57,22 +56,54 @@ export class ApplicantInfoComponent {
   sideScreenIcon = PanelRight;
   fullscreenIcon = Fullscreen;
 
+  form = new FormGroup({
+    name: new FormControl(),
+    role: new FormControl(),
+    email: new FormControl(),
+    employment: new FormControl(),
+    location: new FormControl(),
+    skills: new FormControl(),
+    source: new FormControl(),
+    stage: new FormControl(),
+    website: new FormControl(),
+    attachments: new FormControl(),
+    hiringManager: new FormControl(),
+    added: new FormControl(),
+  });
+
   openedMenu = signal<string | undefined>('');
   openedMenuValues = signal<string[]>([]);
   applicant = signal<Applicant | undefined>(undefined);
   comments = signal<{ value: string; addedTime: string }[]>([]);
   selectedPeek = signal<'side' | 'center'>('side');
 
-  entries = computed(() =>
-    Object.entries(this.applicant() as object).filter(
-      (pair) => !['id', 'name'].includes(pair[0])
-    )
-  );
+  constructor() {
+    effect(() => {
+      this.form.setValue({
+        name: this.applicant()?.name,
+        role: this.applicant()?.role,
+        email: this.applicant()?.email,
+        employment: this.applicant()?.employment,
+        location: this.applicant()?.location,
+        skills: this.applicant()?.skills,
+        source: this.applicant()?.source,
+        stage: this.applicant()?.stage,
+        website: this.applicant()?.website,
+        attachments: this.applicant()?.attachments,
+        hiringManager: this.applicant()?.hiringManager,
+        added: this.applicant()?.added,
+      });
+    });
+  }
 
   ngOnInit(): void {
     const subscription = this.apService.selectedApplicant$.subscribe({
       next: (value) => this.applicant.set(value),
     });
+
+    this.form.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe({ next: (value) => console.log(value) });
 
     this.newNameInputComponent()?.nativeElement.focus();
 
