@@ -25,15 +25,18 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'at-user-card',
-  imports: [HighlightDirective, ActionButtonComponent, ReactiveFormsModule],
+  imports: [
+    HighlightDirective,
+    ActionButtonComponent,
+    ReactiveFormsModule,
+    RouterLink,
+  ],
   templateUrl: './user-card.component.html',
   styleUrl: './user-card.component.scss',
-  host: {
-    '(click)': 'onSelectUser($event)',
-  },
 })
 export class UserCardComponent implements OnInit {
   private el = inject<ElementRef<HTMLDivElement>>(ElementRef);

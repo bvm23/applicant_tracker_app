@@ -1,117 +1,119 @@
-@if (!!createInStage()) {
-<form [formGroup]="newForm" (ngSubmit)="onSubmit()">
-  <div class="input-container">
-    <input
-      type="text"
-      name="name"
-      id="name"
-      placeholder="Type a name..."
-      [class]="['input', 'name']"
-      formControlName="name"
-    />
-  </div>
-  <div class="input-container">
-    <input
-      type="email"
-      name="email"
-      id="email"
-      placeholder="Add Email*"
-      class="input"
-      formControlName="email"
-    />
-  </div>
-  <div class="input-container">
-    <input
-      type="text"
-      name="hiringManager"
-      id="hiringManager"
-      placeholder="Add Hiring Manager*"
-      class="input"
-      formControlName="hiringManager"
-    />
-  </div>
-  <div class="input-container">
-    <input
-      type="text"
-      name="location"
-      id="location"
-      placeholder="Add Location*"
-      class="input"
-      formControlName="location"
-    />
-  </div>
-  <div class="input-container">
-    <input
-      type="text"
-      name="role"
-      id="role"
-      placeholder="Add Role*"
-      class="input"
-      formControlName="role"
-    />
-  </div>
-  <div class="input-container">
-    <input
-      type="text"
-      name="skills"
-      id="skills"
-      placeholder="Add Skills* (eg: a,b,c)"
-      class="input"
-      formControlName="skills"
-    />
-  </div>
-  <button
-    at-action-button
-    type="submit"
-    class="submit-btn"
-    [icon]="checkIcon"
-    color="#13814a"
-    title="submit"
-  ></button>
-</form>
-}@else { @if (focus()?.id===user().id) {
-<div class="backdrop"></div>
-}
-<at-action-button
-  class="option_icon"
-  [icon]="optionIcon"
-  (click)="toggleMenu($event)"
-></at-action-button>
-<div class="bg" title="Name">
-  <h2>{{ user().name }}</h2>
-</div>
-<div class="bg" title="Email">
-  <a [href]="user().email" target="_blank">{{ user().email }}</a>
-</div>
-<div class="manager-div bg" title="Hiring Manager">
-  <div class="image">
-    <img
-      src="https://img.icons8.com/?size=100&id=kDoeg22e5jUY&format=png&color=000000"
-      loading="lazy"
-      alt="avatar"
-    />
-  </div>
-  <span>{{ user().hiringManager }}</span>
-</div>
-<div class="bg" title="Location">
-  <p
-    atHighlight="location"
-    [viewValue]="user().location"
-    textTransform="capitalize"
-  >
-    {{ user().location }}
-  </p>
-</div>
-<div class="bg" title="Role">
-  <p atHighlight="role" [viewValue]="user().role" textTransform="capitalize">
-    {{ user().role }}
-  </p>
-</div>
-<div class="skills bg" title="Skills">
-  @for (skill of user().skills; track $index) {
-  <p atHighlight="skills" [viewValue]="skill" textTransform="capitalize">
-    {{ skill }}
-  </p>
+<a class="host" [routerLink]="['/info', user().id]">
+  @if (!!createInStage()) {
+  <form [formGroup]="newForm" (ngSubmit)="onSubmit()">
+    <div class="input-container">
+      <input
+        type="text"
+        name="name"
+        id="name"
+        placeholder="Type a name..."
+        [class]="['input', 'name']"
+        formControlName="name"
+      />
+    </div>
+    <div class="input-container">
+      <input
+        type="email"
+        name="email"
+        id="email"
+        placeholder="Add Email*"
+        class="input"
+        formControlName="email"
+      />
+    </div>
+    <div class="input-container">
+      <input
+        type="text"
+        name="hiringManager"
+        id="hiringManager"
+        placeholder="Add Hiring Manager*"
+        class="input"
+        formControlName="hiringManager"
+      />
+    </div>
+    <div class="input-container">
+      <input
+        type="text"
+        name="location"
+        id="location"
+        placeholder="Add Location*"
+        class="input"
+        formControlName="location"
+      />
+    </div>
+    <div class="input-container">
+      <input
+        type="text"
+        name="role"
+        id="role"
+        placeholder="Add Role*"
+        class="input"
+        formControlName="role"
+      />
+    </div>
+    <div class="input-container">
+      <input
+        type="text"
+        name="skills"
+        id="skills"
+        placeholder="Add Skills* (eg: a,b,c)"
+        class="input"
+        formControlName="skills"
+      />
+    </div>
+    <button
+      at-action-button
+      type="submit"
+      class="submit-btn"
+      [icon]="checkIcon"
+      color="#13814a"
+      title="submit"
+    ></button>
+  </form>
+  }@else { @if (focus()?.id===user().id) {
+  <div class="backdrop"></div>
   }
-</div>
-}
+  <at-action-button
+    class="option_icon"
+    [icon]="optionIcon"
+    (click)="toggleMenu($event)"
+  ></at-action-button>
+  <div class="bg" title="Name">
+    <h2>{{ user().name }}</h2>
+  </div>
+  <div class="bg" title="Email">
+    <a [href]="user().email" target="_blank">{{ user().email }}</a>
+  </div>
+  <div class="manager-div bg" title="Hiring Manager">
+    <div class="image">
+      <img
+        src="https://img.icons8.com/?size=100&id=kDoeg22e5jUY&format=png&color=000000"
+        loading="lazy"
+        alt="avatar"
+      />
+    </div>
+    <span>{{ user().hiringManager }}</span>
+  </div>
+  <div class="bg" title="Location">
+    <p
+      atHighlight="location"
+      [viewValue]="user().location"
+      textTransform="capitalize"
+    >
+      {{ user().location }}
+    </p>
+  </div>
+  <div class="bg" title="Role">
+    <p atHighlight="role" [viewValue]="user().role" textTransform="capitalize">
+      {{ user().role }}
+    </p>
+  </div>
+  <div class="skills bg" title="Skills">
+    @for (skill of user().skills; track $index) {
+    <p atHighlight="skills" [viewValue]="skill" textTransform="capitalize">
+      {{ skill }}
+    </p>
+    }
+  </div>
+  }
+</a>

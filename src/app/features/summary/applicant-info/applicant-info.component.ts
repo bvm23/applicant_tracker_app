@@ -5,6 +5,7 @@ import {
   effect,
   ElementRef,
   inject,
+  input,
   OnInit,
   signal,
   viewChild,
@@ -57,63 +58,58 @@ export class ApplicantInfoComponent implements OnInit {
   fullscreenIcon = Fullscreen;
 
   form = new FormGroup({
-    name: new FormControl(),
-    role: new FormControl(),
-    email: new FormControl(),
-    employment: new FormControl(),
-    location: new FormControl(),
-    skills: new FormControl(),
-    source: new FormControl(),
-    stage: new FormControl(),
-    website: new FormControl(),
-    attachments: new FormControl(),
-    hiringManager: new FormControl(),
-    added: new FormControl(),
+    name: new FormControl(''),
+    role: new FormControl(''),
+    email: new FormControl(''),
+    employment: new FormControl(''),
+    location: new FormControl(''),
+    source: new FormControl(''),
+    stage: new FormControl(''),
+    website: new FormControl(''),
+    attachments: new FormControl(''),
+    hiringManager: new FormControl(''),
+    added: new FormControl(''),
   });
 
+  uid = input<string>();
   openedMenu = signal<string | undefined>('');
   openedMenuValues = signal<string[]>([]);
-  applicant = signal<Applicant | undefined>(undefined);
   comments = signal<{ value: string; addedTime: string }[]>([]);
   selectedPeek = signal<'side' | 'center'>('side');
 
   constructor() {
     effect(() => {
       this.form.setValue({
-        name: this.applicant()?.name,
-        role: this.applicant()?.role,
-        email: this.applicant()?.email,
-        employment: this.applicant()?.employment,
-        location: this.applicant()?.location,
-        skills: this.applicant()?.skills,
-        source: this.applicant()?.source,
-        stage: this.applicant()?.stage,
-        website: this.applicant()?.website,
-        attachments: this.applicant()?.attachments,
-        hiringManager: this.applicant()?.hiringManager,
-        added: this.applicant()?.added,
+        name: this.applicant()?.name || '',
+        role: this.applicant()?.role || '',
+        email: this.applicant()?.email || '',
+        employment: this.applicant()?.employment || '',
+        location: this.applicant()?.location || '',
+        source: this.applicant()?.source || '',
+        stage: this.applicant()?.stage || '',
+        website: this.applicant()?.website || '',
+        attachments: this.applicant()?.attachments || '',
+        hiringManager: this.applicant()?.hiringManager || '',
+        added: this.applicant()?.added || '',
       });
     });
   }
 
   ngOnInit(): void {
-    const subscription = this.apService.selectedApplicant$.subscribe({
-      next: (value) => this.applicant.set(value),
-    });
-
-    this.form.valueChanges
+    const formSubscription = this.form.valueChanges
       .pipe(debounceTime(500), this.detectInputValueOnly())
-      .subscribe({ next: (value) => console.log(value) });
+      .subscribe({
+        next: (value) => console.log(value),
+      });
 
     this.newNameInputComponent()?.nativeElement.focus();
 
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+    this.destroyRef.onDestroy(() => formSubscription.unsubscribe());
   }
 
   detectInputValueOnly(): OperatorFunction<unknown, Partial<Applicant>> {
-    const applicant = this.applicant() as Applicant;
-
     return map((ap) => {
+      let applicant = this.applicant() as Applicant;
       let inputApplicant = ap as Partial<Applicant>;
       const keys = Object.keys(inputApplicant);
       let changedValues = {};
@@ -126,6 +122,8 @@ export class ApplicantInfoComponent implements OnInit {
       return changedValues;
     });
   }
+
+  applicant = computed(() => this.apService.getApplicantById(this.uid() || ''));
 
   applicantsInSameStage = computed(() =>
     this.filterService
@@ -220,33 +218,29 @@ export class ApplicantInfoComponent implements OnInit {
   }
 
   updateValue(selectedKey: string, newValue: string) {
-    let modifiedValue: string | string[] =
-      selectedKey === 'skills'
-        ? Array.from(new Set([...this.applicant()!.skills, newValue]))
-        : newValue;
-
-    let newData = { [selectedKey]: modifiedValue };
-
-    this.apService.updateApplicant(this.applicant()!.id, newData);
-    this.applicant.update((previousData) =>
-      Object.assign({}, previousData, newData)
-    );
-    if (!['email', 'website', 'skills'].includes(selectedKey)) {
-      this.openedMenu.set(undefined);
-      this.openedMenuValues.set([]);
-    }
+    // let modifiedValue: string | string[] =
+    //   selectedKey === 'skills'
+    //     ? Array.from(new Set([...this.applicant()!.skills, newValue]))
+    //     : newValue;
+    // let newData = { [selectedKey]: modifiedValue };
+    // this.apService.updateApplicant(this.applicant()!.id, newData);
+    // this.applicant.update((previousData) =>
+    //   Object.assign({}, previousData, newData)
+    // );
+    // if (!['email', 'website', 'skills'].includes(selectedKey)) {
+    //   this.openedMenu.set(undefined);
+    //   this.openedMenuValues.set([]);
+    // }
   }
 
   removeValue(e: Event, selectedKey: string, value: string) {
-    let modifiedValue: string[] =
-      this.applicant()?.skills.filter((val) => val !== value) || [];
-
-    let newData = { [selectedKey]: modifiedValue };
-
-    this.apService.updateApplicant(this.applicant()!.id, newData);
-    this.applicant.update((previousData) =>
-      Object.assign({}, previousData, newData)
-    );
+    // let modifiedValue: string[] =
+    //   this.applicant()?.skills.filter((val) => val !== value) || [];
+    // let newData = { [selectedKey]: modifiedValue };
+    // this.apService.updateApplicant(this.applicant()!.id, newData);
+    // this.applicant.update((previousData) =>
+    //   Object.assign({}, previousData, newData)
+    // );
   }
 
   debouncedUpdateValue = debounce(this.updateValue.bind(this), 500);

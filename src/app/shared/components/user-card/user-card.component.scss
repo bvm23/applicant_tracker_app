@@ -5,7 +5,7 @@
   text-transform: capitalize;
 }
 
-:host {
+.host {
   background-color: c.$bg_2;
   min-width: 14rem;
   width: 100%;
@@ -17,6 +17,7 @@
   gap: 0.2rem;
   font-size: 0.8rem;
   color: c.$text_2;
+  text-decoration: none;
   cursor: pointer;
   position: relative;
   border: {
