@@ -1,6 +1,6 @@
 @if (selectedPeek()==='center') {
 <div id="backdrop" (click)="onClose()"></div>
-}
+} @if (editingInput()) { }
 <section
   [class]="{
     default: true,
@@ -46,96 +46,158 @@
     </div>
   </article>
 
-  <form [formGroup]="form" class="info">
+  <section class="info">
     <input
       type="text"
-      name="newInputValue"
-      id="newInputValue"
+      name="name"
       class="name"
-      formControlName="name"
-      #newNameInput
+      [value]="applicant()?.name"
+      (blur)="inputChange($event, 'name')"
+      #inputComponent
     />
     <div class="property-container">
+      @for (key of Keys; track $index) {
       <div class="property">
         <div class="key">
-          <p class="key-data">role</p>
+          <p class="key-data">{{ key }}</p>
         </div>
-        <div class="value">
-          <input formControlName="role" />
+        <div class="value" (click)="showSuggestedValuesAndEdit($event, key)">
+          @if (['email','website'].includes(key)) {
+          <p [style]="{ fontSize: '0.9rem', textDecoration: 'underline' }">
+            {{ getValue(key) }}
+          </p>
+          }@else { @if (typeof getValue(key)==='object') { @for (item of
+          getValue(key); track $index) {
+          <p
+            [atHighlight]="key"
+            [viewValue]="item"
+            padding="0.2rem 0.4rem"
+            textTransform="capitalize"
+            fontSize="0.9rem"
+            [style]="{ marginRight: '0.2rem' }"
+          >
+            {{ item || "" }}
+          </p>
+          } }@else {
+          <p
+            [atHighlight]="getValue(key) ? key : ''"
+            [viewValue]="getValue(key)"
+            padding="0.2rem 0.4rem"
+            textTransform="capitalize"
+            [fontSize]="getValue(key) ? '0.9rem' : '0.8rem'"
+          >
+            {{
+              key === "added"
+                ? (getValue(key) | date : "medium")
+                : getValue(key)
+            }}
+          </p>
+          } } @if(editingInput()===key){
+          <div class="overlay"></div>
+          <article class="edit-modal">
+            @if (['email','website'].includes(key)) {
+            <div class="edit">
+              <input
+                type="text"
+                [value]="getValue(key)"
+                [name]="key"
+                (blur)="inputChange($event, key)"
+                #innerInput
+              />
+            </div>
+            }@else {
+            <div
+              [class]="{ edit: true, 'edit-row': typeof getValue(key)!=='object' }"
+            >
+              <div class="item-div">
+                @if(typeof getValue(key)==='object'){ @for (item of
+                getValue(key);track $index) {
+                <p
+                  [atHighlight]="key"
+                  [viewValue]="item"
+                  padding="0.2rem 0.4rem"
+                  routerLinkActive="selected"
+                  textTransform="capitalize"
+                  fontSize="0.9rem"
+                >
+                  {{ item }}
+                  <span
+                    ><lucide-icon
+                      class="icon"
+                      [img]="closeBtnIcon2"
+                      routerLinkActive="selected"
+                      size="14"
+                      [style]="{
+                        display: item ? 'flex' : 'none'
+                      }"
+                      (click)="removeValue(key, item)"
+                    ></lucide-icon>
+                  </span>
+                </p>
+                }}@else{ @if (getValue(key)) {
+                <p
+                  [atHighlight]="key"
+                  [viewValue]="getValue(key)"
+                  padding="0.2rem 0.4rem"
+                  textTransform="capitalize"
+                  fontSize="0.9rem"
+                >
+                  {{ getValue(key) }}
+                  <span
+                    ><lucide-icon
+                      class="icon"
+                      [img]="closeBtnIcon2"
+                      size="14"
+                      [style]="{
+                        display: 'flex'
+                      }"
+                      (click)="removeValue(key, getValue(key))"
+                    ></lucide-icon>
+                  </span>
+                </p>
+                } }
+              </div>
+              <input type="text" [(ngModel)]="customValue" #innerInput />
+            </div>
+            <p class="label">Select an option or create one</p>
+            <ul>
+              <li
+                [style]="{
+                  display: customValue() ? '' : 'none'
+                }"
+                (click)="selectValue(key)"
+              >
+                <span
+                  [atHighlight]="getValue(key)"
+                  [viewValue]="customValue()"
+                  textTransform="capitalize"
+                  fontSize="0.8rem"
+                >
+                  {{ customValue() }}
+                </span>
+              </li>
+              @for (item of suggestedValues(); track $index) {
+              <li (click)="selectValue(key, item)">
+                <span
+                  [atHighlight]="item"
+                  [viewValue]="item"
+                  textTransform="capitalize"
+                  fontSize="0.8rem"
+                  [style]="{
+                    width: getValue(key).includes(item) ? '100%' : undefined
+                  }"
+                >
+                  {{ item }}
+                </span>
+              </li>
+              }
+            </ul>
+            }
+          </article>
+          }
         </div>
       </div>
-      <div class="property">
-        <div class="key">
-          <p class="key-data">email</p>
-        </div>
-        <div class="value">
-          <input formControlName="email" />
-        </div>
-      </div>
-      <div class="property">
-        <div class="key">
-          <p class="key-data">employment</p>
-        </div>
-        <div class="value">
-          <input formControlName="employment" />
-        </div>
-      </div>
-      <div class="property">
-        <div class="key">
-          <p class="key-data">location</p>
-        </div>
-        <div class="value">
-          <input formControlName="location" />
-        </div>
-      </div>
-      <div class="property">
-        <div class="key">
-          <p class="key-data">source</p>
-        </div>
-        <div class="value">
-          <input formControlName="source" />
-        </div>
-      </div>
-      <div class="property">
-        <div class="key">
-          <p class="key-data">stage</p>
-        </div>
-        <div class="value">
-          <input formControlName="stage" />
-        </div>
-      </div>
-      <div class="property">
-        <div class="key">
-          <p class="key-data">website</p>
-        </div>
-        <div class="value">
-          <input formControlName="website" />
-        </div>
-      </div>
-      <div class="property">
-        <div class="key">
-          <p class="key-data">attachments</p>
-        </div>
-        <div class="value">
-          <input formControlName="attachments" />
-        </div>
-      </div>
-      <div class="property">
-        <div class="key">
-          <p class="key-data">hiring manager</p>
-        </div>
-        <div class="value">
-          <input formControlName="hiringManager" />
-        </div>
-      </div>
-      <div class="property">
-        <div class="key">
-          <p class="key-data">added</p>
-        </div>
-        <div class="value">
-          <input formControlName="added" />
-        </div>
-      </div>
+      }
     </div>
     <article class="extras">
       <div class="comments">
@@ -157,5 +219,5 @@
         </ul>
       </div>
     </article>
-  </form>
+  </section>
 </section>

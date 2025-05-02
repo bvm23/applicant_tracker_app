@@ -20,12 +20,8 @@
   text-decoration: none;
   cursor: pointer;
   position: relative;
-  border: {
-    radius: 0.8rem;
-    width: 1px;
-    style: solid;
-    color: c.$bg_3;
-  }
+  border: 1px solid c.$bg_3;
+  border-radius: 0.8rem;
   @extend %text-align-transform;
 
   & * {
@@ -42,6 +38,11 @@
 
   &:active {
     background-color: c.$bg_1;
+  }
+
+  .selected {
+    border-color: #22648d;
+    border: 1px solid green;
   }
 
   .bg {

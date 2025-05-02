@@ -38,9 +38,8 @@ import { RouterLink } from '@angular/router';
   templateUrl: './user-card.component.html',
   styleUrl: './user-card.component.scss',
 })
-export class UserCardComponent implements OnInit {
-  private el = inject<ElementRef<HTMLDivElement>>(ElementRef);
-  private destroyRef = inject(DestroyRef);
+export class UserCardComponent {
+  private el = inject<ElementRef<HTMLAnchorElement>>(ElementRef);
   private apService = inject(ApplicantService);
 
   optionIcon: LucideIcon = Ellipsis;
@@ -64,17 +63,6 @@ export class UserCardComponent implements OnInit {
   added = output();
 
   formIsValid = signal<boolean>(true);
-
-  ngOnInit(): void {
-    const subscription = this.apService.selectedApplicant$.subscribe({
-      next: (value) => {
-        this.el.nativeElement.style.borderColor =
-          value?.id === this.user().id ? '#22648d' : '';
-      },
-    });
-
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
-  }
 
   /*
    *changing bordercolor of user-card based on form validation.

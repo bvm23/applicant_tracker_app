@@ -1,7 +1,6 @@
 import {
   Component,
   computed,
-  DestroyRef,
   effect,
   ElementRef,
   inject,
@@ -22,10 +21,12 @@ import {
 } from 'lucide-angular';
 import { ActionButtonComponent } from '../../../shared/components/action-button/action-button.component';
 import { ApplicantService } from '../applicant.service';
-import { debounce } from '../../../shared/utils/utils';
 import { FilterService } from '../../../shared/services/filter.service';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, map, OperatorFunction } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { HighlightDirective } from '../../../shared/directives/highlight.directive';
+import { Keys } from '../../../core/constants/data.constants';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'at-applicant-info',
@@ -33,7 +34,9 @@ import { debounceTime, map, OperatorFunction } from 'rxjs';
     LucideAngularModule,
     ActionButtonComponent,
     LucideAngularModule,
-    ReactiveFormsModule,
+    HighlightDirective,
+    FormsModule,
+    DatePipe,
   ],
   templateUrl: './applicant-info.component.html',
   styleUrl: './applicant-info.component.scss',
@@ -41,12 +44,10 @@ import { debounceTime, map, OperatorFunction } from 'rxjs';
 export class ApplicantInfoComponent implements OnInit {
   private apService = inject(ApplicantService);
   private filterService = inject(FilterService);
-  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
 
-  newNameInputComponent =
-    viewChild<ElementRef<HTMLInputElement>>('newNameInput');
-  newInfoInputComponent =
-    viewChild<ElementRef<HTMLInputElement>>('newInfoInput');
+  inputComponent = viewChild<ElementRef<HTMLInputElement>>('inputComponent');
+  innerInputComponent = viewChild<ElementRef<HTMLInputElement>>('innerInput');
   newCommentInputComponent =
     viewChild<ElementRef<HTMLInputElement>>('newCommentInput');
 
@@ -56,74 +57,26 @@ export class ApplicantInfoComponent implements OnInit {
   downArrow = ChevronDown;
   sideScreenIcon = PanelRight;
   fullscreenIcon = Fullscreen;
-
-  form = new FormGroup({
-    name: new FormControl(''),
-    role: new FormControl(''),
-    email: new FormControl(''),
-    employment: new FormControl(''),
-    location: new FormControl(''),
-    source: new FormControl(''),
-    stage: new FormControl(''),
-    website: new FormControl(''),
-    attachments: new FormControl(''),
-    hiringManager: new FormControl(''),
-    added: new FormControl(''),
-  });
+  readonly Keys = Keys.filter((k) => k !== 'name');
 
   uid = input<string>();
-  openedMenu = signal<string | undefined>('');
-  openedMenuValues = signal<string[]>([]);
   comments = signal<{ value: string; addedTime: string }[]>([]);
   selectedPeek = signal<'side' | 'center'>('side');
+  editingInput = signal<string>('');
+  customValue = signal<string>('');
 
-  constructor() {
-    effect(() => {
-      this.form.setValue({
-        name: this.applicant()?.name || '',
-        role: this.applicant()?.role || '',
-        email: this.applicant()?.email || '',
-        employment: this.applicant()?.employment || '',
-        location: this.applicant()?.location || '',
-        source: this.applicant()?.source || '',
-        stage: this.applicant()?.stage || '',
-        website: this.applicant()?.website || '',
-        attachments: this.applicant()?.attachments || '',
-        hiringManager: this.applicant()?.hiringManager || '',
-        added: this.applicant()?.added || '',
-      });
-    });
-  }
+  // focusing on input component inside the editing div when selecting for editing.
+  focusChangeEffect = effect(() => {
+    if (this.editingInput()) {
+      this.innerInputComponent()?.nativeElement.focus();
+    }
+  });
 
   ngOnInit(): void {
-    const formSubscription = this.form.valueChanges
-      .pipe(debounceTime(500), this.detectInputValueOnly())
-      .subscribe({
-        next: (value) => console.log(value),
-      });
-
-    this.newNameInputComponent()?.nativeElement.focus();
-
-    this.destroyRef.onDestroy(() => formSubscription.unsubscribe());
+    this.inputComponent()?.nativeElement.focus();
   }
 
-  detectInputValueOnly(): OperatorFunction<unknown, Partial<Applicant>> {
-    return map((ap) => {
-      let applicant = this.applicant() as Applicant;
-      let inputApplicant = ap as Partial<Applicant>;
-      const keys = Object.keys(inputApplicant);
-      let changedValues = {};
-      keys.map((k) => {
-        let key = k as keyof Partial<Applicant>;
-        if (inputApplicant[key] !== applicant[key]) {
-          Object.assign(changedValues, { [key]: inputApplicant[key] });
-        }
-      });
-      return changedValues;
-    });
-  }
-
-  applicant = computed(() => this.apService.getApplicantById(this.uid() || ''));
+  applicant = computed(() => this.apService.getApplicantById(this.uid()!));
 
   applicantsInSameStage = computed(() =>
     this.filterService
@@ -141,6 +94,12 @@ export class ApplicantInfoComponent implements OnInit {
     )
   );
 
+  suggestedValues = computed(() => {
+    const key = this.editingInput() as Partial<keyof Applicant>;
+    let values = this.generateValues(key);
+    return values;
+  });
+
   nextButtonIsDisabled = computed(
     () =>
       this.applicantsInSameStage().length <= 1 ||
@@ -153,8 +112,59 @@ export class ApplicantInfoComponent implements OnInit {
       this.selectedApplicantIndex() === 0
   );
 
+  showSuggestedValuesAndEdit(e: Event, key: string) {
+    const el = e.target as Element;
+    if (el.tagName !== 'DIV') return;
+
+    if (['added', 'attachments'].includes(key)) return;
+    if (key === this.editingInput()) {
+      this.editingInput.set('');
+      return;
+    }
+    this.editingInput.set(key);
+  }
+
+  getValue(_key: string) {
+    let key = _key as Partial<keyof Applicant>;
+    return this.applicant()![key] as string;
+  }
+
+  generateValues(key: keyof Applicant) {
+    let values: string[] = [];
+    const applicants = this.apService.allApplicants();
+    if (key === 'skills') {
+      for (const ap of applicants) {
+        for (const skill of ap[key]) {
+          values.push(skill);
+        }
+      }
+    } else {
+      for (const ap of applicants) {
+        values.push(ap[key]);
+      }
+    }
+    const valuesWithoutDuplicates = Array.from(new Set(values)).filter(
+      (val) => val !== this.applicant()![key]
+    );
+    return valuesWithoutDuplicates;
+  }
+
+  closeEdit() {
+    this.customValue.set('');
+    this.editingInput.set('');
+  }
+
   switchView(view: 'side' | 'center') {
     this.selectedPeek.set(view);
+  }
+
+  onClose() {
+    this.router.navigate(['']);
+  }
+
+  inputChange(e: Event, key: string) {
+    const input = e.target as HTMLInputElement;
+    this.updateValue(key, input.value);
   }
 
   changeApplicant(action: 'prev' | 'next') {
@@ -174,76 +184,36 @@ export class ApplicantInfoComponent implements OnInit {
     }
 
     let nextApplicantId: string = this.applicantsInSameStage()[nextIndex];
-    this.apService.selectApplicant(nextApplicantId);
+    this.router.navigate(['info', nextApplicantId]);
   }
 
-  isEditingValue(key: string) {
-    return this.openedMenu() === key;
-  }
-
-  onClose() {
-    this.apService.removeSelectedApplicant();
-  }
-
-  toggleValueMenu(e: Event, key: string) {
-    let requiredTarget = e.target as HTMLDivElement;
-    if (requiredTarget.tagName !== 'DIV') {
-      return;
+  selectValue(key: string, value?: string) {
+    let selectedValue = value ? value : this.customValue();
+    selectedValue = selectedValue.toLowerCase();
+    let newData: string | string[] = [];
+    if (typeof this.getValue(key) === 'object') {
+      newData = [...this.getValue(key), selectedValue] as string[];
+      newData = Array.from(new Set(newData));
+    } else {
+      newData = selectedValue;
     }
 
-    if (['added', 'attachments'].includes(key)) return;
-    this.openedMenu.set(this.openedMenu() === key ? undefined : key);
+    this.updateValue(key, newData);
+    this.closeEdit();
+  }
 
-    if (key === 'email' || key === 'website') {
-      setTimeout(() => {
-        this.newInfoInputComponent()?.nativeElement.focus();
-      });
-      return;
+  updateValue(key: string, newData: string | string[]) {
+    this.apService.updateApplicant(this.uid()!, { [key]: newData });
+  }
+
+  removeValue(key: string, value: string) {
+    let newValue: string | string[] = '';
+    if (typeof this.getValue(key) === 'object') {
+      let currentValue = this.getValue(key);
+      newValue = [...currentValue].filter((val) => val !== value);
     }
-
-    let allValues: string[] = [];
-    this.apService
-      .allApplicants()
-      .filter((ap) => ap.id !== this.applicant()?.id)
-      .map((ap) => {
-        let _key = key as keyof Applicant;
-        let value = ap[_key];
-        if (typeof value === 'object') {
-          allValues.push(...value);
-        } else {
-          allValues.push(value);
-        }
-      });
-    this.openedMenuValues.set(Array.from(new Set(allValues)));
+    this.updateValue(key, newValue);
   }
-
-  updateValue(selectedKey: string, newValue: string) {
-    // let modifiedValue: string | string[] =
-    //   selectedKey === 'skills'
-    //     ? Array.from(new Set([...this.applicant()!.skills, newValue]))
-    //     : newValue;
-    // let newData = { [selectedKey]: modifiedValue };
-    // this.apService.updateApplicant(this.applicant()!.id, newData);
-    // this.applicant.update((previousData) =>
-    //   Object.assign({}, previousData, newData)
-    // );
-    // if (!['email', 'website', 'skills'].includes(selectedKey)) {
-    //   this.openedMenu.set(undefined);
-    //   this.openedMenuValues.set([]);
-    // }
-  }
-
-  removeValue(e: Event, selectedKey: string, value: string) {
-    // let modifiedValue: string[] =
-    //   this.applicant()?.skills.filter((val) => val !== value) || [];
-    // let newData = { [selectedKey]: modifiedValue };
-    // this.apService.updateApplicant(this.applicant()!.id, newData);
-    // this.applicant.update((previousData) =>
-    //   Object.assign({}, previousData, newData)
-    // );
-  }
-
-  debouncedUpdateValue = debounce(this.updateValue.bind(this), 500);
 
   addComment() {
     let comment = this.newCommentInputComponent()?.nativeElement.value!;

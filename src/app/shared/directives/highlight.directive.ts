@@ -24,6 +24,7 @@ export class HighlightDirective {
    * generate unique color for the values passed to the function
    */
   generateColor(key: string, value: string) {
+    if (!key) return;
     if (['name', 'email', 'hiringManager', 'website', 'added'].includes(key)) {
       return '';
     }
@@ -107,6 +108,6 @@ export class HighlightDirective {
 
   ngOnInit() {
     const color = this.generateColor(this.viewFor(), this.viewValue());
-    this.setHighlight(this.viewFor(), this.viewValue(), color);
+    this.setHighlight(this.viewFor(), this.viewValue(), color || '');
   }
 }

@@ -61,7 +61,11 @@ export class ApplicantService {
   duplicateApplicant(id: string) {
     const user = this.applicants().find((ap) => ap.id === id);
     if (!user) return;
-    let duplicateUser = { ...user, id: Math.random().toString() };
+    let duplicateUser = {
+      ...user,
+      id: Math.random().toString(),
+      added: new Date().toISOString(),
+    };
     this.applicants.update((existing) => [...existing, duplicateUser]);
   }
 
