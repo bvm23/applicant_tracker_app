@@ -13,6 +13,7 @@ import {
 } from 'lucide-angular';
 import { ActionButtonComponent } from '../../action-button/action-button.component';
 import { HighlightDirective } from '../../../directives/highlight.directive';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'at-card-menu',
@@ -27,6 +28,8 @@ import { HighlightDirective } from '../../../directives/highlight.directive';
 })
 export class CardMenuComponent {
   private apService = inject(ApplicantService);
+  private router = inject(Router);
+
   user = input.required<Applicant>();
   close = output();
   stages = computed(() => Stages.filter((s) => s.value !== this.user().stage));
@@ -59,5 +62,8 @@ export class CardMenuComponent {
   onDelete() {
     this.apService.deletApplicant(this.user().id);
     this.closeMenu();
+    this.router.navigate([''], {
+      onSameUrlNavigation: 'reload',
+    });
   }
 }

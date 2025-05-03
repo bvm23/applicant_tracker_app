@@ -12,7 +12,6 @@ import { ApplicantService } from '../applicant.service';
 export class SummaryContentComponent {
   private apService = inject(ApplicantService);
 
-  selectedApplicant$ = this.apService.selectedApplicant$;
   applicants = this.apService.allApplicants;
 
   view = input.required<string>();

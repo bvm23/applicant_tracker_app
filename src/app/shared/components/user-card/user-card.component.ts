@@ -1,4 +1,12 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  input,
+  OnInit,
+  output,
+  signal,
+} from '@angular/core';
 import {
   type Applicant,
   type InputApplicantData,
@@ -15,22 +23,18 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'at-user-card',
-  imports: [
-    HighlightDirective,
-    ActionButtonComponent,
-    ReactiveFormsModule,
-    RouterLink,
-    RouterLinkActive,
-  ],
+  imports: [HighlightDirective, ActionButtonComponent, ReactiveFormsModule],
   templateUrl: './user-card.component.html',
   styleUrl: './user-card.component.scss',
 })
-export class UserCardComponent {
+export class UserCardComponent implements OnInit {
   private apService = inject(ApplicantService);
+  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
 
   optionIcon: LucideIcon = Ellipsis;
   checkIcon: LucideIcon = Check;
@@ -52,7 +56,15 @@ export class UserCardComponent {
   focusChange = output<{ id: string; x: number; y: number }>();
   added = output();
 
+  selected = signal<string | undefined>(undefined);
   formIsValid = signal<boolean>(true);
+
+  ngOnInit(): void {
+    const subscription = this.apService.selectedApplicantId$.subscribe({
+      next: (value) => this.selected.set(value),
+    });
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
 
   toggleMenu(e: MouseEvent) {
     this.focusChange.emit({
@@ -62,10 +74,16 @@ export class UserCardComponent {
     });
   }
 
+  openInfo(e: Event) {
+    const el = e.target as Element;
+    if (el.tagName !== 'DIV') return;
+    this.apService.selectApplicant(this.user().id);
+    this.router.navigate(['info', this.user().id]);
+  }
+
   onSubmit() {
     const valid = this.newForm.valid;
     this.formIsValid.set(valid);
-    console.log(valid);
 
     if (!valid) {
       return;

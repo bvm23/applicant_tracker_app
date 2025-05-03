@@ -9,7 +9,7 @@ import { type InputApplicantData } from './applicant.model';
 })
 export class ApplicantService {
   private applicants = signal<Applicant[]>([]);
-  selectedApplicant$ = new BehaviorSubject<Applicant | undefined>(undefined);
+  selectedApplicantId$ = new BehaviorSubject<string | undefined>(undefined);
 
   constructor() {
     this.applicants.set(Data as Applicant[]);
@@ -70,14 +70,7 @@ export class ApplicantService {
   }
 
   selectApplicant(userId: string) {
-    if (userId === this.selectedApplicant$.value?.id) {
-      this.removeSelectedApplicant();
-      return;
-    }
-    const applicant = this.applicants().find((ap) => ap.id === userId);
-    if (applicant) {
-      this.selectedApplicant$.next(applicant);
-    }
+    this.selectedApplicantId$.next(userId);
   }
 
   updateApplicant(userId: string, newData: Record<string, string | string[]>) {
@@ -94,6 +87,6 @@ export class ApplicantService {
   }
 
   removeSelectedApplicant() {
-    this.selectedApplicant$.next(undefined);
+    this.selectedApplicantId$.next(undefined);
   }
 }

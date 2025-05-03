@@ -122,11 +122,6 @@ export const ModifierActionButtonData: {
   view: string;
 }[] = [
   {
-    icon: icons['FILTER'],
-    name: 'filter',
-    view: 'FILTER',
-  },
-  {
     icon: icons['SORT'],
     name: 'sort',
     view: 'SORT',

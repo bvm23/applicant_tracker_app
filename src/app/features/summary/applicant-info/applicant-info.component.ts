@@ -23,7 +23,12 @@ import { ActionButtonComponent } from '../../../shared/components/action-button/
 import { ApplicantService } from '../applicant.service';
 import { FilterService } from '../../../shared/services/filter.service';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  ResolveFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
 import { HighlightDirective } from '../../../shared/directives/highlight.directive';
 import { Keys } from '../../../core/constants/data.constants';
 import { DatePipe } from '@angular/common';
@@ -64,6 +69,7 @@ export class ApplicantInfoComponent implements OnInit {
   selectedPeek = signal<'side' | 'center'>('side');
   editingInput = signal<string>('');
   customValue = signal<string>('');
+  applicant = input<Applicant>();
 
   // focusing on input component inside the editing div when selecting for editing.
   focusChangeEffect = effect(() => {
@@ -74,9 +80,8 @@ export class ApplicantInfoComponent implements OnInit {
 
   ngOnInit(): void {
     this.inputComponent()?.nativeElement.focus();
+    this.apService.selectApplicant(this.uid()!);
   }
-
-  applicant = computed(() => this.apService.getApplicantById(this.uid()!));
 
   applicantsInSameStage = computed(() =>
     this.filterService
@@ -159,7 +164,8 @@ export class ApplicantInfoComponent implements OnInit {
   }
 
   onClose() {
-    this.router.navigate(['']);
+    this.apService.removeSelectedApplicant();
+    this.router.navigate([''], { replaceUrl: true });
   }
 
   inputChange(e: Event, key: string) {
@@ -184,6 +190,7 @@ export class ApplicantInfoComponent implements OnInit {
     }
 
     let nextApplicantId: string = this.applicantsInSameStage()[nextIndex];
+    this.apService.selectApplicant(nextApplicantId);
     this.router.navigate(['info', nextApplicantId]);
   }
 
@@ -225,3 +232,21 @@ export class ApplicantInfoComponent implements OnInit {
     this.newCommentInputComponent()!.nativeElement.value = '';
   }
 }
+
+/*
+ *resolve function used for providing applicant data to all routes
+ *and redirecting to homepage if the requested applicant is not found
+ */
+export const appplicantFound: ResolveFn<Applicant | undefined> = (
+  activatedRoute: ActivatedRouteSnapshot,
+  routerState: RouterStateSnapshot
+) => {
+  const apService = inject(ApplicantService);
+  const router = inject(Router);
+  const uid = activatedRoute.paramMap.get('uid');
+  const fetchedApplicant = apService.getApplicantById(uid!);
+  if (!fetchedApplicant) {
+    router.navigate(['']);
+  }
+  return fetchedApplicant;
+};

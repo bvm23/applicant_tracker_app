@@ -1,5 +1,5 @@
 @if (!!createInStage()) {
-<a [class]="{ host: true, invalid: !formIsValid() }">
+<div [class]="{ host: true, invalid: !formIsValid() }">
   <form [formGroup]="newForm" (ngSubmit)="onSubmit()">
     <div class="input-container">
       <input
@@ -70,15 +70,15 @@
       title="submit"
     ></button>
   </form>
-</a>
+</div>
 }@else {
-<a
+<div
   [class]="{
     host: true,
     backdrop: focus()?.id === user().id,
+    selected: selected() === user().id
   }"
-  [routerLink]="['info', user().id]"
-  routerLinkActive="selected"
+  (click)="openInfo($event)"
 >
   <at-action-button
     class="option_icon"
@@ -122,5 +122,5 @@
     </p>
     }
   </div>
-</a>
+</div>
 }
