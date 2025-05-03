@@ -22,7 +22,21 @@
   position: relative;
   border: 1px solid c.$bg_3;
   border-radius: 0.8rem;
+  overflow: hidden;
   @extend %text-align-transform;
+
+  &.selected {
+    border: 1px solid #22648d;
+  }
+
+  &.backdrop {
+    background-color: rgb(34, 100, 141, 0.3);
+  }
+
+  &.invalid {
+    border: 1px solid #792223;
+    background-color: rgb(121, 34, 35, 0.2);
+  }
 
   & * {
     width: fit-content;
@@ -38,11 +52,6 @@
 
   &:active {
     background-color: c.$bg_1;
-  }
-
-  .selected {
-    border-color: #22648d;
-    border: 1px solid green;
   }
 
   .bg {
@@ -65,16 +74,6 @@
     &:hover {
       background-color: c.$bg_4;
     }
-  }
-
-  .backdrop {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background-color: c.$blue;
-    opacity: 0.2;
   }
 
   a {

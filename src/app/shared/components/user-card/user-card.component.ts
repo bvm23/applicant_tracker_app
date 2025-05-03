@@ -1,14 +1,4 @@
-import {
-  Component,
-  DestroyRef,
-  effect,
-  ElementRef,
-  inject,
-  input,
-  OnInit,
-  output,
-  signal,
-} from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import {
   type Applicant,
   type InputApplicantData,
@@ -25,7 +15,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'at-user-card',
@@ -34,12 +24,12 @@ import { RouterLink } from '@angular/router';
     ActionButtonComponent,
     ReactiveFormsModule,
     RouterLink,
+    RouterLinkActive,
   ],
   templateUrl: './user-card.component.html',
   styleUrl: './user-card.component.scss',
 })
 export class UserCardComponent {
-  private el = inject<ElementRef<HTMLAnchorElement>>(ElementRef);
   private apService = inject(ApplicantService);
 
   optionIcon: LucideIcon = Ellipsis;
@@ -64,19 +54,6 @@ export class UserCardComponent {
 
   formIsValid = signal<boolean>(true);
 
-  /*
-   *changing bordercolor of user-card based on form validation.
-   *formIsValid = no change
-   *form is invalid, bordercolor changed to red
-   */
-  formEffect = effect(() => {
-    const valid = this.formIsValid();
-    this.el.nativeElement.style.borderColor = !valid ? '#792223' : '';
-    this.el.nativeElement.style.backgroundColor = !valid
-      ? 'rgb(121, 34, 35, 0.2)'
-      : '';
-  });
-
   toggleMenu(e: MouseEvent) {
     this.focusChange.emit({
       id: this.user().id,
@@ -85,15 +62,11 @@ export class UserCardComponent {
     });
   }
 
-  onSelectUser(e: Event) {
-    if (e.target === this.el.nativeElement) {
-      this.apService.selectApplicant(this.user().id);
-    }
-  }
-
   onSubmit() {
     const valid = this.newForm.valid;
     this.formIsValid.set(valid);
+    console.log(valid);
+
     if (!valid) {
       return;
     }
