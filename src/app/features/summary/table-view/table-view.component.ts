@@ -81,7 +81,21 @@ export class TableViewComponent {
       .filter((ap) =>
         ap.role.includes(this.view() === 'engineering' ? 'engineering' : '')
       )
-      .map((ap) => Object.entries(ap));
+      .map((ap) => {
+        return Object.entries(ap).sort((a, b) => {
+          let aKey = a[0];
+          let bKey = b[0];
+          let indexOfAKey = this.keys.findIndex((val) => val === aKey);
+          let indexOfBKey = this.keys.findIndex((val) => val === bKey);
+          if (indexOfBKey < indexOfAKey) {
+            return 1;
+          } else if (indexOfBKey > indexOfAKey) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
+      });
   });
 
   suggestedValues = computed(() => {
