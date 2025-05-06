@@ -1,18 +1,24 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Applicant } from './applicant.model';
-import { Data, Stages } from '../../core/constants/data.constants';
+import { Stages } from '../../core/constants/data.constants';
 import { BehaviorSubject } from 'rxjs';
 import { type InputApplicantData } from './applicant.model';
+import { DbService } from '../../shared/services/db.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApplicantService {
+  private dbService = inject(DbService);
   private applicants = signal<Applicant[]>([]);
   selectedApplicantId$ = new BehaviorSubject<string | undefined>(undefined);
 
   constructor() {
-    this.applicants.set(Data as Applicant[]);
+    this.dbService.getAllData().subscribe({
+      next: (data) => {
+        this.applicants.set(data);
+      },
+    });
   }
 
   stages = Stages;

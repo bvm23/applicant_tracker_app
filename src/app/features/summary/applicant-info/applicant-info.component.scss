@@ -219,64 +219,8 @@ section.default {
           }
         }
 
-        .value-menu {
-          display: grid;
-          grid-column: 2/4;
-          grid-row: 2/4;
-          position: absolute;
-          width: 100%;
-          z-index: 24;
-
-          .content {
-            padding: 0.4rem;
-
-            #newInputValue {
-              width: 100%;
-              background: transparent;
-              border: 0;
-              text-align: left;
-              outline: none;
-              color: c.$text_1;
-            }
-
-            span {
-              font-size: 0.8rem;
-              font-style: italic;
-            }
-
-            .values {
-              display: flex;
-              flex-direction: column;
-              gap: 0.2rem;
-              margin-top: 0.4rem;
-
-              .value-holder {
-                width: 100%;
-                padding: 0.2rem;
-                border-radius: 0.2rem;
-                cursor: pointer;
-
-                &:hover {
-                  background-color: c.$bg_5;
-                }
-
-                p {
-                  width: fit-content;
-                  text-transform: capitalize;
-                }
-              }
-            }
-          }
-        }
-
-        .key-data,
-        .value-data {
+        .key-data {
           @extend %data;
-        }
-
-        .empty-value {
-          font-style: oblique;
-          color: c.$bg_5;
         }
       }
     }
