@@ -88,7 +88,7 @@ export class ApplicantService {
     }
   }
 
-  deletApplicant(userId: string) {
+  deleteApplicant(userId: string) {
     this.applicants.set(this.applicants().filter((appl) => appl.id !== userId));
   }
 

@@ -24,6 +24,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DbService } from '../../services/db.service';
 
 @Component({
   selector: 'at-user-card',
@@ -33,6 +34,7 @@ import { Router } from '@angular/router';
 })
 export class UserCardComponent implements OnInit {
   private apService = inject(ApplicantService);
+  private dbService = inject(DbService);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
 
@@ -98,9 +100,16 @@ export class UserCardComponent implements OnInit {
       hiringManager: formData.hiringManager!.trim().toLowerCase(),
       stage: this.createInStage()!,
       skills: formData.skills?.split(',').map((s) => s.trim().toLowerCase())!,
+      attachments: '',
+      source: '',
+      website: '',
+      employment: 'looking',
     };
 
-    this.apService.addApplicant(newApplicantData);
+    this.dbService.add(newApplicantData).subscribe({
+      next: (createdId) => Object.assign(newApplicantData, { id: createdId }),
+      complete: () => this.apService.addApplicant(newApplicantData),
+    });
     this.newForm.reset();
     this.added.emit();
   }

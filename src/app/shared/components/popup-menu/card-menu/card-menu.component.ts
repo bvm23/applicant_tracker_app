@@ -14,6 +14,7 @@ import {
 import { ActionButtonComponent } from '../../action-button/action-button.component';
 import { HighlightDirective } from '../../../directives/highlight.directive';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DbService } from '../../../services/db.service';
 
 @Component({
   selector: 'at-card-menu',
@@ -28,6 +29,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class CardMenuComponent {
   private apService = inject(ApplicantService);
+  private dbService = inject(DbService);
   private router = inject(Router);
 
   user = input.required<Applicant>();
@@ -55,12 +57,19 @@ export class CardMenuComponent {
   }
 
   onMove(newStage: string) {
-    this.apService.updateApplicant(this.user().id, { stage: newStage });
+    const userId = this.user().id;
+    this.dbService.update(userId, { stage: newStage }).subscribe({
+      complete: () =>
+        this.apService.updateApplicant(userId, { stage: newStage }),
+    });
     this.closeMenu();
   }
 
   onDelete() {
-    this.apService.deletApplicant(this.user().id);
+    const userId = this.user().id;
+    this.dbService.delete(userId).subscribe({
+      complete: () => this.apService.deleteApplicant(userId),
+    });
     this.closeMenu();
     this.router.navigate([''], {
       onSameUrlNavigation: 'reload',

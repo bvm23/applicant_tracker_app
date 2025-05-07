@@ -14,7 +14,4 @@ export interface Applicant {
   added: string;
 }
 
-export type InputApplicantData = Omit<
-  Applicant,
-  'id' | 'attachments' | 'website' | 'employment' | 'source' | 'added'
->;
+export type InputApplicantData = Omit<Applicant, 'id' | 'added'>;

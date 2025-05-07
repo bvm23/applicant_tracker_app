@@ -1,10 +1,19 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { ApplicantService } from '../summary/applicant.service';
 
 @Component({
   selector: 'at-header',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+  private router = inject(Router);
+  private apService = inject(ApplicantService);
+
+  goHome() {
+    this.router.navigate(['']);
+    this.apService.removeSelectedApplicant();
+  }
+}

@@ -22,6 +22,7 @@ import { Applicant } from '../applicant.model';
 import { PopupMenuComponent } from '../../../shared/components/popup-menu/popup-menu.component';
 import { FormsModule } from '@angular/forms';
 import { ActionButtonComponent } from '../../../shared/components/action-button/action-button.component';
+import { DbService } from '../../../shared/services/db.service';
 
 @Component({
   selector: 'at-table-view',
@@ -39,6 +40,7 @@ import { ActionButtonComponent } from '../../../shared/components/action-button/
 export class TableViewComponent {
   private apService = inject(ApplicantService);
   private filterService = inject(FilterService);
+  private dbService = inject(DbService);
 
   private newValueInputComponent = viewChild<ElementRef<HTMLInputElement>>(
     'newValueInputComponent'
@@ -180,6 +182,8 @@ export class TableViewComponent {
       modifiedNewValue = newSkills;
     }
     let newData = { [key]: modifiedNewValue };
-    this.apService.updateApplicant(userId, newData);
+    this.dbService.update(userId, newData).subscribe({
+      complete: () => this.apService.updateApplicant(userId, newData),
+    });
   }
 }

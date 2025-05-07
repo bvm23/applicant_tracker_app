@@ -32,6 +32,7 @@ import {
 import { HighlightDirective } from '../../../shared/directives/highlight.directive';
 import { Keys } from '../../../core/constants/data.constants';
 import { DatePipe } from '@angular/common';
+import { DbService } from '../../../shared/services/db.service';
 
 @Component({
   selector: 'at-applicant-info',
@@ -49,6 +50,7 @@ import { DatePipe } from '@angular/common';
 export class ApplicantInfoComponent implements OnInit {
   private apService = inject(ApplicantService);
   private filterService = inject(FilterService);
+  private dbService = inject(DbService);
   private router = inject(Router);
 
   inputComponent = viewChild<ElementRef<HTMLInputElement>>('inputComponent');
@@ -210,7 +212,10 @@ export class ApplicantInfoComponent implements OnInit {
   }
 
   updateValue(key: string, newData: string | string[]) {
-    this.apService.updateApplicant(this.uid()!, { [key]: newData });
+    this.dbService.update(this.uid()!, { [key]: newData }).subscribe({
+      complete: () =>
+        this.apService.updateApplicant(this.uid()!, { [key]: newData }),
+    });
   }
 
   removeValue(key: string, value: string) {
