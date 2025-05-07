@@ -22,7 +22,7 @@ import { type Applicant } from '../../features/summary/applicant.model';
 })
 export class DbService {
   private app: FirebaseApp = initializeApp(environment.firebaseConfig);
-  private db: Firestore = getFirestore(this.app);
+  private db: Firestore = getFirestore(this.app, this.app.name);
   private applicantsCollection = collection(this.db, 'applicants');
 
   getAllData() {
