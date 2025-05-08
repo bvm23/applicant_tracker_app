@@ -1,5 +1,4 @@
 export const environment = {
-  production: false,
   firebaseConfig: {
     apiKey: 'AIzaSyCNMkf0WNYQRw4cYv7CcygtHBBvBkPtXGw',
     authDomain: 'applicant-tracker-40c59.firebaseapp.com',
