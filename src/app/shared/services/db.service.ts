@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { environment } from '../../../environments/environment';
 import {
@@ -13,17 +13,50 @@ import {
   serverTimestamp,
   deleteDoc,
   updateDoc,
+  onSnapshot,
+  QueryDocumentSnapshot,
 } from 'firebase/firestore';
-import { catchError, from, map, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, from, map, throwError } from 'rxjs';
 import { type Applicant } from '../../features/summary/applicant.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DbService {
+  private destroyRef = inject(DestroyRef);
   private app: FirebaseApp = initializeApp(environment.firebaseConfig);
   private db: Firestore = getFirestore(this.app, this.app.name);
   private applicantsCollection = collection(this.db, 'applicants');
+  realtimeData$ = new BehaviorSubject<Applicant[] | undefined>(undefined);
+
+  constructor() {
+    const unsubscribeRealtimeDBData = onSnapshot(
+      this.applicantsCollection,
+      (snapshot) => {
+        let collectionData: Applicant[] = [];
+
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === 'modified') {
+            const formattedData = this.modifyDocument(change.doc);
+            collectionData.push(formattedData);
+          }
+        });
+
+        this.realtimeData$.next(collectionData);
+      }
+    );
+
+    this.destroyRef.onDestroy(() => unsubscribeRealtimeDBData());
+  }
+
+  modifyDocument(document: QueryDocumentSnapshot) {
+    let modifiedDoc = {
+      ...document.data(),
+      id: document.id,
+      added: new Date(document.data()['added'].toDate()).toISOString(),
+    } as Applicant;
+    return modifiedDoc;
+  }
 
   getAllData() {
     const querySnapshot = getDocs(this.applicantsCollection);

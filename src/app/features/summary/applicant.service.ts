@@ -1,27 +1,38 @@
-import { inject, Injectable, signal } from '@angular/core';
-import { Applicant } from './applicant.model';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { type Applicant } from './applicant.model';
 import { Stages } from '../../core/constants/data.constants';
 import { BehaviorSubject } from 'rxjs';
-import { type InputApplicantData } from './applicant.model';
 import { DbService } from '../../shared/services/db.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApplicantService {
+  private destroyRef = inject(DestroyRef);
   private dbService = inject(DbService);
   private applicants = signal<Applicant[]>([]);
   selectedApplicantId$ = new BehaviorSubject<string | undefined>(undefined);
 
   constructor() {
-    this.dbService.getAllData().subscribe({
+    const fetchDataSubscription = this.dbService.getAllData().subscribe({
       next: (data) => {
-        this.applicants.set(data);
+        this.applicants.set(data || []);
       },
+    });
+    // const realTimeDataSubscription = this.dbService.realtimeData$.subscribe({
+    //   next: (values) => {
+    //     console.log(values);
+    //     this.applicants.update((current) => [...current, ...(values || [])]);
+    //   },
+    // });
+
+    this.destroyRef.onDestroy(() => {
+      fetchDataSubscription.unsubscribe();
+      // realTimeDataSubscription.unsubscribe();
     });
   }
 
-  stages = Stages;
+  private stages = Stages;
   allApplicants = this.applicants.asReadonly();
 
   getApplicantsByStage(applicants: Applicant[]) {
@@ -50,29 +61,20 @@ export class ApplicantService {
     return this.applicants().find((ap) => ap.id === userId);
   }
 
-  addApplicant(inputData: InputApplicantData) {
-    const newApplicant: Applicant = {
-      ...inputData,
-      attachments: '',
-      source: '',
-      website: '',
-      employment: 'looking',
-      id: Math.random().toString(),
-      added: new Date().toISOString(),
-    };
-    this.applicants.update((existing) => [...existing, newApplicant]);
-    return;
+  addApplicant(inputData: Applicant) {
+    this.applicants.update((current) => [...current, inputData]);
+    return this;
   }
 
   duplicateApplicant(id: string) {
-    const user = this.applicants().find((ap) => ap.id === id);
+    const user = this.applicants()?.find((ap) => ap.id === id);
     if (!user) return;
     let duplicateUser = {
       ...user,
       id: Math.random().toString(),
       added: new Date().toISOString(),
     };
-    this.applicants.update((existing) => [...existing, duplicateUser]);
+    this.applicants.update((existing) => [...(existing || []), duplicateUser]);
   }
 
   selectApplicant(userId: string) {
@@ -80,11 +82,11 @@ export class ApplicantService {
   }
 
   updateApplicant(userId: string, newData: Record<string, string | string[]>) {
-    const applicantsList = this.applicants();
-    const user = applicantsList.find((usr) => usr.id === userId);
+    const applicantsList = [...this.applicants()];
+    const user = applicantsList?.find((usr) => usr.id === userId);
     if (user) {
       Object.assign(user, newData);
-      this.applicants.set([...applicantsList]);
+      this.applicants.set(applicantsList);
     }
   }
 

@@ -19,14 +19,13 @@ export class GridViewComponent {
   focused = signal<{ id: string; x: number; y: number } | undefined>(undefined);
   addingNewApplicantToStage = signal<string | undefined>(undefined);
 
+  applicants = this.apService.allApplicants;
+  sortConfig = this.filterService.sortCriteria;
+  stages = Stages;
+
   focusedUser = computed(() =>
     this.applicants().find((appl) => appl.id === this.focused()?.id)
   );
-
-  applicants = this.apService.allApplicants;
-  sortConfig = this.filterService.sortCriteria;
-
-  stages = Stages;
 
   applicantByStages = computed(() => {
     if (this.sortConfig().key && this.sortConfig().order) {

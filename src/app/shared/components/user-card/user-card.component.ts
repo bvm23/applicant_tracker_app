@@ -108,7 +108,8 @@ export class UserCardComponent implements OnInit {
 
     this.dbService.add(newApplicantData).subscribe({
       next: (createdId) => Object.assign(newApplicantData, { id: createdId }),
-      complete: () => this.apService.addApplicant(newApplicantData),
+      complete: () =>
+        this.apService.addApplicant(newApplicantData as Applicant),
     });
     this.newForm.reset();
     this.added.emit();
