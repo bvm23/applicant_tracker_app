@@ -19,16 +19,9 @@ export class ApplicantService {
         this.applicants.set(data || []);
       },
     });
-    // const realTimeDataSubscription = this.dbService.realtimeData$.subscribe({
-    //   next: (values) => {
-    //     console.log(values);
-    //     this.applicants.update((current) => [...current, ...(values || [])]);
-    //   },
-    // });
 
     this.destroyRef.onDestroy(() => {
       fetchDataSubscription.unsubscribe();
-      // realTimeDataSubscription.unsubscribe();
     });
   }
 

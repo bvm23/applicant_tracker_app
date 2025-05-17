@@ -29,25 +29,7 @@ export class DbService {
   private applicantsCollection = collection(this.db, 'applicants');
   realtimeData$ = new BehaviorSubject<Applicant[] | undefined>(undefined);
 
-  constructor() {
-    const unsubscribeRealtimeDBData = onSnapshot(
-      this.applicantsCollection,
-      (snapshot) => {
-        let collectionData: Applicant[] = [];
-
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === 'modified') {
-            const formattedData = this.modifyDocument(change.doc);
-            collectionData.push(formattedData);
-          }
-        });
-
-        this.realtimeData$.next(collectionData);
-      }
-    );
-
-    this.destroyRef.onDestroy(() => unsubscribeRealtimeDBData());
-  }
+  constructor() {}
 
   modifyDocument(document: QueryDocumentSnapshot) {
     let modifiedDoc = {
