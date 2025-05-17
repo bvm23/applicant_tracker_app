@@ -16,6 +16,7 @@ import {
   ChevronDown,
   Fullscreen,
   PanelRight,
+  SendHorizontal,
   LucideAngularModule,
 } from 'lucide-angular';
 import { ActionButtonComponent } from '../../../shared/components/action-button/action-button.component';
@@ -64,14 +65,15 @@ export class ApplicantInfoComponent implements OnInit {
   downArrow = ChevronDown;
   sideScreenIcon = PanelRight;
   fullscreenIcon = Fullscreen;
+  sendIcon = SendHorizontal;
   readonly Keys = Keys.filter((k) => k !== 'name');
 
   uid = input<string>();
-  comments = signal<{ value: string; addedTime: string }[]>([]);
   selectedPeek = signal<'side' | 'center'>('side');
   editingInput = signal<string>('');
   customValue = signal<string>('');
   applicant = input<Applicant>();
+  commentText = '';
 
   ngOnInit(): void {
     this.inputComponent()?.nativeElement.focus();
@@ -86,6 +88,10 @@ export class ApplicantInfoComponent implements OnInit {
           .filter((ap) => ap.stage === this.applicant()?.stage)
       )
       .map((ap) => ap.id)
+  );
+
+  userComments = computed(() =>
+    this.apService.allComments().filter((c) => c.uid === this.uid())
   );
 
   selectedApplicantIndex = computed(() =>
@@ -171,13 +177,10 @@ export class ApplicantInfoComponent implements OnInit {
   }
 
   addComment() {
-    let comment = this.newCommentInputComponent()?.nativeElement.value!;
-    let addedTime = new Date().toLocaleString();
-    this.comments.update((previousComments) => [
-      ...previousComments,
-      { value: comment, addedTime },
-    ]);
-    this.newCommentInputComponent()!.nativeElement.value = '';
+    if (!this.commentText) return;
+    const commentData = { text: this.commentText, uid: this.uid()! };
+    this.dbService.addComment(commentData);
+    this.commentText = '';
   }
 }
 

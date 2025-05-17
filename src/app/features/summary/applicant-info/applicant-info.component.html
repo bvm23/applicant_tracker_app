@@ -107,18 +107,31 @@
     <article class="extras">
       <div class="comments">
         <h5>Comments</h5>
-        <input
-          type="text"
-          name="comment"
-          id="comment"
-          placeholder="Add a comment..."
-          (change)="addComment()"
-          #newCommentInput
-        />
+        <div class="inputContainer">
+          <input
+            type="text"
+            id="comment"
+            placeholder="Add a comment..."
+            [(ngModel)]="commentText"
+          />
+          <at-action-button
+            [icon]="sendIcon"
+            (click)="addComment()"
+            [style]="{
+              margin: 'auto',
+              visibility: commentText ? '' : 'hidden'
+            }"
+          />
+        </div>
         <ul class="comments-container">
-          @for (comment of comments(); track $index) {
+          @for (comment of userComments(); track $index) {
           <div>
-            <li>{{ comment.value }}</li>
+            <li>
+              {{ comment.text }}
+              <span>
+                {{ comment.added | date : "medium" }}
+              </span>
+            </li>
           </div>
           }
         </ul>

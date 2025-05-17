@@ -3,6 +3,7 @@ import { type Applicant } from './applicant.model';
 import { Stages } from '../../core/constants/data.constants';
 import { BehaviorSubject } from 'rxjs';
 import { DbService } from '../../shared/services/db.service';
+import { type Comment } from './comment.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ export class ApplicantService {
   private destroyRef = inject(DestroyRef);
   private dbService = inject(DbService);
   private applicants = signal<Applicant[]>([]);
+  private comments = signal<Comment[]>([]);
   selectedApplicantId$ = new BehaviorSubject<string | undefined>(undefined);
 
   constructor() {
@@ -20,13 +22,21 @@ export class ApplicantService {
       },
     });
 
+    const commentsSubscription = this.dbService.comments$.subscribe({
+      next: (fetchedComments) => {
+        this.comments.set(fetchedComments || []);
+      },
+    });
+
     this.destroyRef.onDestroy(() => {
       fetchDataSubscription.unsubscribe();
+      commentsSubscription.unsubscribe();
     });
   }
 
   private stages = Stages;
   allApplicants = this.applicants.asReadonly();
+  allComments = this.comments.asReadonly();
 
   getApplicantsByStage(applicants: Applicant[]) {
     return this.stages.map((stage) => {

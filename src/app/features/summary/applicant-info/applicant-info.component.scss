@@ -168,12 +168,19 @@ section.default {
         flex-direction: column;
         gap: 0.2rem;
 
+        .inputContainer {
+          display: flex;
+          position: relative;
+        }
+
         input {
+          flex-grow: 1;
           background: none;
           border: 0;
           border-bottom: thin solid c.$bg_4;
           color: c.$text_3;
           padding: 1rem 0;
+          padding-right: 1rem;
           outline: none;
           font-size: 0.8rem;
           text-align: left;
@@ -187,6 +194,24 @@ section.default {
           flex-direction: column;
           gap: 0.6rem;
           height: max-content;
+
+          li {
+            list-style-type: square;
+            list-style-position: outside;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+
+            &::marker {
+              color: c.$red;
+            }
+
+            span {
+              font-size: 0.6rem;
+              display: block;
+              color: c.$text_3;
+              font-style: italic;
+            }
+          }
         }
       }
     }
