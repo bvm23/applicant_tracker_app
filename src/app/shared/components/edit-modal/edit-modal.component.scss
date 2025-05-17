@@ -1,0 +1,82 @@
+@use "../../../../sass/colors" as c;
+
+%data {
+  padding: 0.6rem 0rem;
+  width: 100%;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+input {
+  width: 100%;
+  background: none;
+  color: c.$text_1;
+  outline: none;
+  text-align: left;
+  border-color: transparent;
+  overflow: hidden;
+}
+
+.edit-modal {
+  box-sizing: border-box;
+  min-width: max-content;
+  width: 100%;
+  border-radius: 0.6rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: c.$bg_3;
+  border: 1px solid c.$bg_4;
+  z-index: 18;
+
+  .edit-row {
+    grid-template-columns: min-content auto;
+  }
+
+  .edit {
+    display: grid;
+    grid-auto-flow: row;
+    gap: 0.4rem;
+    padding: 0.4rem;
+
+    .item-div {
+      display: flex;
+      gap: 0.2rem;
+      width: min-content;
+    }
+
+    p {
+      display: flex;
+      width: max-content;
+      justify-content: center;
+      align-items: center;
+      gap: 0.4rem;
+    }
+  }
+
+  .label {
+    padding: 0.4rem;
+    font-size: 0.8rem;
+    border-top: 1px solid c.$bg_4;
+    color: c.$text_3;
+  }
+
+  ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.4rem;
+    padding-top: 0;
+
+    li {
+      display: flex;
+      padding: 0.2rem 0.2rem;
+      border-radius: 0.4rem;
+
+      &:hover {
+        background-color: c.$bg_4;
+      }
+    }
+  }
+}

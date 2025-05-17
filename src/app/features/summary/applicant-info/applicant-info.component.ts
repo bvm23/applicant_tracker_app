@@ -1,7 +1,6 @@
 import {
   Component,
   computed,
-  effect,
   ElementRef,
   inject,
   input,
@@ -33,6 +32,7 @@ import { HighlightDirective } from '../../../shared/directives/highlight.directi
 import { Keys } from '../../../core/constants/data.constants';
 import { DatePipe } from '@angular/common';
 import { DbService } from '../../../shared/services/db.service';
+import { EditModalComponent } from '../../../shared/components/edit-modal/edit-modal.component';
 
 @Component({
   selector: 'at-applicant-info',
@@ -43,6 +43,7 @@ import { DbService } from '../../../shared/services/db.service';
     HighlightDirective,
     FormsModule,
     DatePipe,
+    EditModalComponent,
   ],
   templateUrl: './applicant-info.component.html',
   styleUrl: './applicant-info.component.scss',
@@ -54,7 +55,6 @@ export class ApplicantInfoComponent implements OnInit {
   private router = inject(Router);
 
   inputComponent = viewChild<ElementRef<HTMLInputElement>>('inputComponent');
-  innerInputComponent = viewChild<ElementRef<HTMLInputElement>>('innerInput');
   newCommentInputComponent =
     viewChild<ElementRef<HTMLInputElement>>('newCommentInput');
 
@@ -72,13 +72,6 @@ export class ApplicantInfoComponent implements OnInit {
   editingInput = signal<string>('');
   customValue = signal<string>('');
   applicant = input<Applicant>();
-
-  // focusing on input component inside the editing div when selecting for editing.
-  focusChangeEffect = effect(() => {
-    if (this.editingInput()) {
-      this.innerInputComponent()?.nativeElement.focus();
-    }
-  });
 
   ngOnInit(): void {
     this.inputComponent()?.nativeElement.focus();
@@ -100,12 +93,6 @@ export class ApplicantInfoComponent implements OnInit {
       (apId) => apId === this.applicant()?.id
     )
   );
-
-  suggestedValues = computed(() => {
-    const key = this.editingInput() as Partial<keyof Applicant>;
-    let values = this.generateValues(key);
-    return values;
-  });
 
   nextButtonIsDisabled = computed(
     () =>
@@ -134,26 +121,6 @@ export class ApplicantInfoComponent implements OnInit {
   getValue(_key: string) {
     let key = _key as Partial<keyof Applicant>;
     return this.applicant()![key] as string;
-  }
-
-  generateValues(key: keyof Applicant) {
-    let values: string[] = [];
-    const applicants = this.apService.allApplicants();
-    if (key === 'skills') {
-      for (const ap of applicants) {
-        for (const skill of ap[key]) {
-          values.push(skill);
-        }
-      }
-    } else {
-      for (const ap of applicants) {
-        values.push(ap[key]);
-      }
-    }
-    const valuesWithoutDuplicates = Array.from(new Set(values)).filter(
-      (val) => val !== this.applicant()![key]
-    );
-    return valuesWithoutDuplicates;
   }
 
   closeEdit() {
@@ -196,35 +163,11 @@ export class ApplicantInfoComponent implements OnInit {
     this.router.navigate(['info', nextApplicantId]);
   }
 
-  selectValue(key: string, value?: string) {
-    let selectedValue = value ? value : this.customValue();
-    selectedValue = selectedValue.toLowerCase();
-    let newData: string | string[] = [];
-    if (typeof this.getValue(key) === 'object') {
-      newData = [...this.getValue(key), selectedValue] as string[];
-      newData = Array.from(new Set(newData));
-    } else {
-      newData = selectedValue;
-    }
-
-    this.updateValue(key, newData);
-    this.closeEdit();
-  }
-
   updateValue(key: string, newData: string | string[]) {
     this.dbService.update(this.uid()!, { [key]: newData }).subscribe({
       complete: () =>
         this.apService.updateApplicant(this.uid()!, { [key]: newData }),
     });
-  }
-
-  removeValue(key: string, value: string) {
-    let newValue: string | string[] = '';
-    if (typeof this.getValue(key) === 'object') {
-      let currentValue = this.getValue(key);
-      newValue = [...currentValue].filter((val) => val !== value);
-    }
-    this.updateValue(key, newValue);
   }
 
   addComment() {

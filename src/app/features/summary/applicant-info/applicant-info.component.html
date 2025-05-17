@@ -94,106 +94,11 @@
           </p>
           } } @if(editingInput()===key){
           <div class="overlay"></div>
-          <article class="edit-modal">
-            @if (['email','website'].includes(key)) {
-            <div class="edit">
-              <input
-                type="text"
-                [value]="getValue(key)"
-                [name]="key"
-                (blur)="inputChange($event, key)"
-                #innerInput
-              />
-            </div>
-            }@else {
-            <div
-              [class]="{ edit: true, 'edit-row': typeof getValue(key)!=='object' }"
-            >
-              <div class="item-div">
-                @if(typeof getValue(key)==='object'){ @for (item of
-                getValue(key);track $index) {
-                <p
-                  [atHighlight]="key"
-                  [viewValue]="item"
-                  padding="0.2rem 0.4rem"
-                  routerLinkActive="selected"
-                  textTransform="capitalize"
-                  fontSize="0.9rem"
-                >
-                  {{ item }}
-                  <span
-                    ><lucide-icon
-                      class="icon"
-                      [img]="closeBtnIcon2"
-                      routerLinkActive="selected"
-                      size="14"
-                      [style]="{
-                        display: item ? 'flex' : 'none'
-                      }"
-                      (click)="removeValue(key, item)"
-                    ></lucide-icon>
-                  </span>
-                </p>
-                }}@else{ @if (getValue(key)) {
-                <p
-                  [atHighlight]="key"
-                  [viewValue]="getValue(key)"
-                  padding="0.2rem 0.4rem"
-                  textTransform="capitalize"
-                  fontSize="0.9rem"
-                >
-                  {{ getValue(key) }}
-                  <span
-                    ><lucide-icon
-                      class="icon"
-                      [img]="closeBtnIcon2"
-                      size="14"
-                      [style]="{
-                        display: 'flex'
-                      }"
-                      (click)="removeValue(key, getValue(key))"
-                    ></lucide-icon>
-                  </span>
-                </p>
-                } }
-              </div>
-              <input type="text" [(ngModel)]="customValue" #innerInput />
-            </div>
-            <p class="label">Select an option or create one</p>
-            <ul>
-              <li
-                [style]="{
-                  display: customValue() ? '' : 'none'
-                }"
-                (click)="selectValue(key)"
-              >
-                <span
-                  [atHighlight]="getValue(key)"
-                  [viewValue]="customValue()"
-                  textTransform="capitalize"
-                  fontSize="0.8rem"
-                >
-                  {{ customValue() }}
-                </span>
-              </li>
-              @for (item of suggestedValues(); track $index) {
-              <li (click)="selectValue(key, item)">
-                <span
-                  [atHighlight]="item"
-                  [viewValue]="item"
-                  textTransform="capitalize"
-                  fontSize="0.8rem"
-                  [style]="{
-                    width: getValue(key).includes(item) ? '100%' : undefined
-                  }"
-                >
-                  {{ item }}
-                </span>
-              </li>
-              }
-            </ul>
-            }
-          </article>
+          <at-edit-modal
+            [key]="editingInput()"
+            [applicant]="applicant()!"
+            (edited)="closeEdit()"
+          />
           }
         </div>
       </div>

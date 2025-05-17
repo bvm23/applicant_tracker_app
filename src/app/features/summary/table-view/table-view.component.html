@@ -84,73 +84,12 @@
         }
       </p>
       } } @if (isEditableAndEditing(val[0], val[1], ap[0][1])) {
-      <at-popup-menu class="value-menu">
-        <article class="content">
-          <div class="input-div">
-            <input
-              type="text"
-              id="newValueInput"
-              name="newValueInput"
-              [(ngModel)]="newValueInput"
-              #newValueInputComponent
-            />
-            <at-action-button
-              [style]="{
-                display: ['name', 'email', 'website'].includes(val[0])
-                  ? ''
-                  : 'none'
-              }"
-              [icon]="submitIcon"
-              class="icon"
-              (click)="onChangeValue(val[0], newValueInput(), ap[0][1])"
-            ></at-action-button>
-          </div>
-          <div
-            class="values"
-            [style]="{
-              display: !['name', 'email', 'website'].includes(val[0])
-                ? 'flex'
-                : 'none'
-            }"
-          >
-            <label class="label">select an option or create one</label>
-            <p
-              class="item new-item"
-              [style]="{
-                display:
-                  newValueInput() &&
-                  !suggestedValues().includes(newValueInput())
-                    ? 'block'
-                    : 'none'
-              }"
-              (click)="onChangeValue(val[0], newValueInput(), ap[0][1])"
-            >
-              {{ newValueInput() }}
-            </p>
-            @for (item of suggestedValues() ; track $index) { @if (item) {
-            <p
-              class="item"
-              (click)="
-                val[1].length > 0 && val[1].includes(item)
-                  ? onChangeValue(val[0], item, ap[0][1], 'remove')
-                  : onChangeValue(val[0], item, ap[0][1])
-              "
-              [style]="{
-                backgroundColor: newValueInput() === item ? '#353535' : ''
-              }"
-            >
-              {{ item || undefined }}
-              @if(val[1].includes(item)){
-              <at-action-button
-                [icon]="removeIcon"
-                class="icon"
-              ></at-action-button>
-              }
-            </p>
-            } }
-          </div>
-        </article>
-      </at-popup-menu>
+      <div class="overlay" (click)="clearSelection()"></div>
+      <at-edit-modal
+        [key]="val[0]"
+        [applicant]="selectedApplicant()!"
+        (edited)="clearSelection()"
+      />
       }
     </td>
     }
