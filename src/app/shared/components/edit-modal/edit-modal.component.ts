@@ -75,7 +75,9 @@ export class EditModalComponent {
 
   inputChange(e: Event, key: string) {
     const input = e.target as HTMLInputElement;
-    this.updateValue(input.value);
+    let _key = key as keyof Applicant;
+    if (input.value.trim() === this.applicant()[_key]) return;
+    this.updateValue(input.value.trim());
   }
 
   updateValue(newData: string | string[]) {

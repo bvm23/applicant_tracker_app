@@ -145,7 +145,8 @@ export class ApplicantInfoComponent implements OnInit {
 
   inputChange(e: Event, key: string) {
     const input = e.target as HTMLInputElement;
-    this.updateValue(key, input.value);
+    if (input.value.trim() === this.applicant()?.name) return;
+    this.updateValue(key, input.value.trim());
   }
 
   changeApplicant(action: 'prev' | 'next') {
