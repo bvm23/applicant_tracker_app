@@ -1,5 +1,5 @@
 @if (!!createInStage()) {
-<div [class]="{ host: true, invalid: !formIsValid() }">
+<div [class]="{ host: true, invalid: formIsInvalid() }">
   <form [formGroup]="newForm" (ngSubmit)="onSubmit()">
     <div class="input-container">
       <input
@@ -7,7 +7,7 @@
         name="name"
         id="name"
         placeholder="Type a name..."
-        [class]="['input', 'name']"
+        [class]="['input', 'name', fieldIsInvalid('name') && 'invalid-field']"
         formControlName="name"
       />
     </div>
@@ -17,7 +17,7 @@
         name="email"
         id="email"
         placeholder="Add Email*"
-        class="input"
+        [class]="{ input: true, 'invalid-field': fieldIsInvalid('email') }"
         formControlName="email"
       />
     </div>
@@ -27,7 +27,10 @@
         name="hiringManager"
         id="hiringManager"
         placeholder="Add Hiring Manager*"
-        class="input"
+        [class]="{
+          input: true,
+          'invalid-field': fieldIsInvalid('hiringManager')
+        }"
         formControlName="hiringManager"
       />
     </div>
@@ -37,7 +40,7 @@
         name="location"
         id="location"
         placeholder="Add Location*"
-        class="input"
+        [class]="{ input: true, 'invalid-field': fieldIsInvalid('location') }"
         formControlName="location"
       />
     </div>
@@ -47,7 +50,7 @@
         name="role"
         id="role"
         placeholder="Add Role*"
-        class="input"
+        [class]="{ input: true, 'invalid-field': fieldIsInvalid('role') }"
         formControlName="role"
       />
     </div>
@@ -57,7 +60,7 @@
         name="skills"
         id="skills"
         placeholder="Add Skills* (eg: a,b,c)"
-        class="input"
+        [class]="{ input: true, 'invalid-field': fieldIsInvalid('skills') }"
         formControlName="skills"
       />
     </div>

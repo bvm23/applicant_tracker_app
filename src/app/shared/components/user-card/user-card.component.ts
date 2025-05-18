@@ -11,6 +11,7 @@ import {
   type Applicant,
   type InputApplicantData,
 } from '../../../features/summary/applicant.model';
+import { type FormControls } from './user-card.model';
 import { HighlightDirective } from '../../directives/highlight.directive';
 import { ActionButtonComponent } from '../action-button/action-button.component';
 import { Check, Ellipsis } from 'lucide-angular';
@@ -41,7 +42,7 @@ export class UserCardComponent implements OnInit {
   optionIcon: LucideIcon = Ellipsis;
   checkIcon: LucideIcon = Check;
 
-  newForm = new FormGroup({
+  newForm = new FormGroup<FormControls>({
     name: new FormControl('', { validators: [Validators.required] }),
     email: new FormControl('', {
       validators: [Validators.required, Validators.email],
@@ -59,7 +60,7 @@ export class UserCardComponent implements OnInit {
   added = output();
 
   selected = signal<string | undefined>(undefined);
-  formIsValid = signal<boolean>(true);
+  formIsInvalid = signal<boolean>(false);
 
   ngOnInit(): void {
     const subscription = this.apService.selectedApplicantId$.subscribe({
@@ -84,10 +85,10 @@ export class UserCardComponent implements OnInit {
   }
 
   onSubmit() {
-    const valid = this.newForm.valid;
-    this.formIsValid.set(valid);
+    const invalid = this.newForm.invalid;
+    this.formIsInvalid.set(invalid);
 
-    if (!valid) {
+    if (invalid) {
       return;
     }
 
@@ -113,5 +114,11 @@ export class UserCardComponent implements OnInit {
     });
     this.newForm.reset();
     this.added.emit();
+  }
+
+  fieldIsInvalid(field: string) {
+    let _f = field as keyof FormControls;
+    let control = this.newForm.controls[_f];
+    return control.invalid && control.touched && control.dirty;
   }
 }

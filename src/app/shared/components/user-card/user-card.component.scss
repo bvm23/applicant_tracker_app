@@ -36,7 +36,6 @@
 
   &.invalid {
     border: 1px solid #792223;
-    background-color: rgb(121, 34, 35, 0.2);
   }
 
   & * {
@@ -53,6 +52,10 @@
 
   &:active {
     background-color: c.$bg_1;
+  }
+
+  .invalid-field {
+    background-color: rgb(121, 34, 35, 0.3);
   }
 
   .bg {
