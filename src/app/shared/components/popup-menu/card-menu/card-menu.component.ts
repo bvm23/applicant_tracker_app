@@ -1,7 +1,7 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { PopupMenuComponent } from '../popup-menu.component';
 import { ApplicantService } from '../../../../features/summary/applicant.service';
-import { Applicant } from '../../../../features/summary/applicant.model';
+import { type Applicant } from '../../../../features/summary/applicant.model';
 import { Stages } from '../../../../core/constants/data.constants';
 import {
   Copy,
@@ -52,7 +52,11 @@ export class CardMenuComponent {
   }
 
   onDuplicate() {
-    this.apService.duplicateApplicant(this.user().id);
+    let { id, added, ...userData } = this.user();
+    this.dbService.add(userData).subscribe({
+      next: (createdId) => Object.assign(userData, { id: createdId }),
+      complete: () => this.apService.addApplicant(userData as Applicant),
+    });
     this.closeMenu();
   }
 
