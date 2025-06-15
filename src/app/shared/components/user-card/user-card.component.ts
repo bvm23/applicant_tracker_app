@@ -26,6 +26,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DbService } from '../../services/db.service';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component({
   selector: 'at-user-card',
@@ -36,6 +37,7 @@ import { DbService } from '../../services/db.service';
 export class UserCardComponent implements OnInit {
   private apService = inject(ApplicantService);
   private dbService = inject(DbService);
+  private loader = inject(LoadingBarService).useRef();
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
 
@@ -100,17 +102,23 @@ export class UserCardComponent implements OnInit {
       role: formData.role!.trim().toLowerCase(),
       hiringManager: formData.hiringManager!.trim().toLowerCase(),
       stage: this.createInStage()!,
-      skills: formData.skills?.split(',').map((s) => s.trim().toLowerCase())!,
+      skills: formData.skills
+        ?.split(',')
+        .filter((s) => s.trim())
+        .map((s) => s.trim().toLowerCase())!,
       attachments: '',
       source: '',
       website: '',
       employment: 'looking',
     };
 
+    this.loader.start();
     this.dbService.add(newApplicantData).subscribe({
       next: (createdId) => Object.assign(newApplicantData, { id: createdId }),
-      complete: () =>
+      complete: () => {
         this.apService.addApplicant(newApplicantData as Applicant),
+          this.loader.stop();
+      },
     });
     this.newForm.reset();
     this.added.emit();

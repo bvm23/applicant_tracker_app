@@ -4,6 +4,7 @@ import { Stages } from '../../core/constants/data.constants';
 import { BehaviorSubject } from 'rxjs';
 import { DbService } from '../../shared/services/db.service';
 import { type Comment } from './comment.model';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Injectable({
   providedIn: 'root',
@@ -11,21 +12,23 @@ import { type Comment } from './comment.model';
 export class ApplicantService {
   private destroyRef = inject(DestroyRef);
   private dbService = inject(DbService);
+  private loader = inject(LoadingBarService).useRef();
+
   private applicants = signal<Applicant[]>([]);
   private comments = signal<Comment[]>([]);
   selectedApplicantId$ = new BehaviorSubject<string | undefined>(undefined);
 
   constructor() {
+    this.loader.start();
     const fetchDataSubscription = this.dbService.getAllData().subscribe({
       next: (data) => {
         this.applicants.set(data || []);
+        this.loader.stop();
       },
     });
 
     const commentsSubscription = this.dbService.comments$.subscribe({
-      next: (fetchedComments) => {
-        this.comments.set(fetchedComments || []);
-      },
+      next: (fetchedComments) => this.comments.set(fetchedComments || []),
     });
 
     this.destroyRef.onDestroy(() => {
@@ -67,17 +70,6 @@ export class ApplicantService {
   addApplicant(inputData: Applicant) {
     this.applicants.update((current) => [...current, inputData]);
     return this;
-  }
-
-  duplicateApplicant(id: string) {
-    const user = this.applicants()?.find((ap) => ap.id === id);
-    if (!user) return;
-    let duplicateUser = {
-      ...user,
-      id: Math.random().toString(),
-      added: new Date().toISOString(),
-    };
-    this.applicants.update((existing) => [...(existing || []), duplicateUser]);
   }
 
   selectApplicant(userId: string) {

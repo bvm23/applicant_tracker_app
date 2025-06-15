@@ -17,6 +17,8 @@
     "@angular/platform-browser": "^19.2.0",
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
+    "@ngx-loading-bar/core": "^7.0.0",
+    "@ngx-loading-bar/http-client": "^7.0.0",
     "dotenv": "^16.5.0",
     "firebase": "^11.6.1",
     "lucide-angular": "^0.484.0",

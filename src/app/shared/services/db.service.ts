@@ -14,7 +14,6 @@ import {
   deleteDoc,
   updateDoc,
   onSnapshot,
-  QueryDocumentSnapshot,
 } from 'firebase/firestore';
 import { BehaviorSubject, catchError, from, map, throwError } from 'rxjs';
 import { type Applicant } from '../../features/summary/applicant.model';
@@ -57,15 +56,6 @@ export class DbService {
     this.destroyRef.onDestroy(() => unsubscribeRealtimeCommentsFetch());
   }
 
-  modifyDocument(document: QueryDocumentSnapshot) {
-    let modifiedDoc = {
-      ...document.data(),
-      id: document.id,
-      added: new Date(document.data()['added'].toDate()).toISOString(),
-    } as Applicant;
-    return modifiedDoc;
-  }
-
   getAllData() {
     const querySnapshot = getDocs(this.applicantsCollection);
     return from(querySnapshot).pipe(
@@ -79,8 +69,8 @@ export class DbService {
             } as Applicant)
         )
       ),
-      catchError(() =>
-        throwError(() => new Error('failed to load applicants data'))
+      catchError((err) =>
+        throwError(() => new Error('failed to load applicants data', err))
       )
     );
   }

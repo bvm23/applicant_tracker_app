@@ -6,6 +6,7 @@ import {
 } from '@angular/router';
 
 import { routes } from './app.routes';
+import { provideLoadingBar } from '@ngx-loading-bar/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,5 +16,6 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding(),
       withRouterConfig({ paramsInheritanceStrategy: 'always' })
     ),
+    provideLoadingBar({ latencyThreshold: 0 }),
   ],
 };

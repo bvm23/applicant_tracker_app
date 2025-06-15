@@ -31,3 +31,12 @@
 ></at-card-menu>
 <div class="backdrop" (click)="clearFocus()"></div>
 }
+<article
+  class="no-data-message"
+  [style]="{
+    display: loaded() && applicants().length === 0 ? 'flex' : 'none',
+  }"
+>
+  <p>No Applicants</p>
+  <button (click)="loadSampleData()">Click here to load sample data</button>
+</article>

@@ -15,6 +15,7 @@ import { ActionButtonComponent } from '../../action-button/action-button.compone
 import { HighlightDirective } from '../../../directives/highlight.directive';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DbService } from '../../../services/db.service';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component({
   selector: 'at-card-menu',
@@ -30,6 +31,7 @@ import { DbService } from '../../../services/db.service';
 export class CardMenuComponent {
   private apService = inject(ApplicantService);
   private dbService = inject(DbService);
+  private loader = inject(LoadingBarService).useRef();
   private router = inject(Router);
 
   user = input.required<Applicant>();
@@ -53,26 +55,37 @@ export class CardMenuComponent {
 
   onDuplicate() {
     let { id, added, ...userData } = this.user();
+    this.loader.start();
     this.dbService.add(userData).subscribe({
       next: (createdId) => Object.assign(userData, { id: createdId }),
-      complete: () => this.apService.addApplicant(userData as Applicant),
+      complete: () => {
+        this.apService.addApplicant(userData as Applicant);
+        this.loader.stop();
+      },
     });
     this.closeMenu();
   }
 
   onMove(newStage: string) {
     const userId = this.user().id;
+    this.loader.start();
     this.dbService.update(userId, { stage: newStage }).subscribe({
-      complete: () =>
-        this.apService.updateApplicant(userId, { stage: newStage }),
+      complete: () => {
+        this.apService.updateApplicant(userId, { stage: newStage });
+        this.loader.stop();
+      },
     });
     this.closeMenu();
   }
 
   onDelete() {
     const userId = this.user().id;
+    this.loader.start();
     this.dbService.delete(userId).subscribe({
-      complete: () => this.apService.deleteApplicant(userId),
+      complete: () => {
+        this.apService.deleteApplicant(userId);
+        this.loader.stop();
+      },
     });
     this.closeMenu();
     this.router.navigate([''], {
